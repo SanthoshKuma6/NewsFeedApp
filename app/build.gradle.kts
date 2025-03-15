@@ -2,16 +2,18 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    kotlin("kapt")
+    id ("kotlin-parcelize")
 }
 
 android {
     namespace = "com.task.newsfeedapp"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.task.newsfeedapp"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -56,4 +58,61 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+
+    // Navigation for Compose
+    implementation("androidx.navigation:navigation-compose:2.8.8")
+
+    // Retrofit for network requests
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+
+    // OkHttp for HTTP requests
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+
+    // OkHttp Logging Interceptor for debugging network requests
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
+
+    // Gson converter for Retrofit
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // Gson for JSON parsing
+    implementation("com.google.code.gson:gson:2.8.8")
+
+    // ViewModel KTX for easy usage of ViewModels
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0")
+
+    // Paging for pagination handling
+    implementation("androidx.paging:paging-runtime-ktx:3.1.1")
+    implementation("androidx.paging:paging-compose:1.0.0-alpha14")
+
+    // LiveData for data observation
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.5.0")
+
+    // Activity Compose (for Compose-based activities)
+    implementation("androidx.activity:activity-compose:1.4.0")
+
+    // ViewModel Compose (for Compose-based ViewModels)
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.0")
+
+    // Coil for image loading in Compose
+    implementation("io.coil-kt:coil-compose:2.1.0")
+
+    // ConstraintLayout for Compose
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+
+    // Room Database for local persistence
+    implementation("androidx.room:room-runtime:2.4.2")
+    implementation("androidx.room:room-ktx:2.4.2")
+    annotationProcessor("androidx.room:room-compiler:2.4.2")
+    kapt ("androidx.room:room-compiler:2.4.3")
+
+    // Compose Runtime (needed for Compose-based projects)
+    implementation("androidx.compose.runtime:runtime:1.4.0")
+
+    // Coroutines Core for asynchronous programming
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
+
+
+    implementation("androidx.paging:paging-compose:3.2.0")
+
 }
