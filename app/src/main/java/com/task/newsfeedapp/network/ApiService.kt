@@ -25,25 +25,7 @@ interface ApiService {
 
         ): Response<ArticleResponse>
 
-    object NetworkClient {
-        private val loggingInterceptor = HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY  // Logs request and response
-        }
-        private val client = OkHttpClient.Builder()
-            .dns(Dns.SYSTEM) // Use system DNS
-            .addInterceptor(loggingInterceptor)
-            .build()
-        private val retrofit: Retrofit by lazy {
-            Retrofit.Builder()
-                .baseUrl(Utils.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client) // Set the OkHttpClient with logging
-                .build()
-        }
-        val apiService: ApiService by lazy {
-            retrofit.create(ApiService::class.java)
-        }
-    }
+
 }
 
 

@@ -1,5 +1,6 @@
 package com.task.newsfeedapp.navigation
 
+import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
@@ -13,6 +14,7 @@ import com.task.newsfeedapp.model.ArticleResponse
 import com.task.newsfeedapp.screens.ArticleDetailScreen
 import com.task.newsfeedapp.screens.ArticleScreen
 import com.task.newsfeedapp.screens.ChangeBackgroundScreen
+import com.task.newsfeedapp.screens.WebPageLoader
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable

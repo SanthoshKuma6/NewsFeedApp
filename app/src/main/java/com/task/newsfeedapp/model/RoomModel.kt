@@ -3,7 +3,9 @@ package com.task.newsfeedapp.model
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.task.newsfeedapp.model.ArticleResponse.Legacy.Multimedia
 import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 
 
 @Parcelize
@@ -21,7 +23,16 @@ data class RoomModel(
     var typeOfMaterial: String? = null,
     var uri: String? = null,
     var wordCount: Int? = null,
-
+    var imageUrl:String?=null,
+//    var multimedia: @RawValue List<Multimedia> = emptyList(),
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
-):Parcelable
+
+) : Parcelable
+
+@Parcelize
+data class Multimedia(
+    var imageUri: String? = null
+
+) : Parcelable
+

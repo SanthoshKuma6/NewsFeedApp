@@ -40,7 +40,11 @@ import com.task.newsfeedapp.resource.Response
 import com.task.newsfeedapp.mvvm.repository.RoomRepository
 import com.task.newsfeedapp.mvvm.viewmodel.RoomViewModel
 import com.task.newsfeedapp.network.ApiService
+import com.task.newsfeedapp.network.NetworkClient
 import com.task.newsfeedapp.utils.Utils.api_key
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 /**
@@ -58,7 +62,7 @@ fun ArticleScreen(navController: NavController) {
 
     val viewModel: ArticleViewModel = viewModel(
         factory = ViewModelFactory(
-            ArticleRepo(ApiService.NetworkClient.apiService), context
+            ArticleRepo(NetworkClient.apiService), context
         )
     )
     val repo = remember { RoomRepository(RoomDao.getDatabase(context)) }
@@ -116,7 +120,12 @@ fun ArticleScreen(navController: NavController) {
 
             is Response.Success -> {
                 isLoading = false
+
+
                 val roomDataList: List<RoomModel> = result.data!!.response!!.docs.map { doc ->
+
+
+                    val imageUrl = doc.multimedia.firstOrNull()?.url ?: ""
                     RoomModel(
                         webUrl = doc.webUrl,
                         abstract = doc.abstract,
@@ -129,10 +138,15 @@ fun ArticleScreen(navController: NavController) {
                         sectionName = doc.sectionName,
                         typeOfMaterial = doc.typeOfMaterial,
                         uri = doc.uri,
-                        wordCount = doc.wordCount
+                        wordCount = doc.wordCount,
+                        imageUrl=imageUrl
                     )
 
+
+
+
                 }
+
                 InsertRoomData(roomDataList)
 
                 result.data.let { article ->
@@ -155,6 +169,7 @@ fun ArticleScreen(navController: NavController) {
 }
 
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun InsertRoomData(roomDataList: List<RoomModel>) {
     val context = LocalContext.current
@@ -162,9 +177,10 @@ fun InsertRoomData(roomDataList: List<RoomModel>) {
     val factory = remember { RoomViewModelFactory(repo) }
     val roomViewModel: RoomViewModel = viewModel(factory = factory)
 
-    LaunchedEffect(Unit) {
+    CoroutineScope(Dispatchers.IO).launch{
         roomViewModel.insert(roomDataList)
-        roomViewModel.getList()
     }
+
+
 }
 

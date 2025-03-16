@@ -1,5 +1,6 @@
 package com.task.newsfeedapp.mvvm.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.task.newsfeedapp.model.RoomModel
@@ -18,7 +19,13 @@ class RoomViewModel (
     fun insert(saveData: List<RoomModel>)  {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                roomRepository.insert(saveData)
+                if (roomRepository.insert(saveData).equals(false)){
+                    Log.d("RoomTAG", "Insert failed")
+                } else{
+                    roomRepository.insert(saveData)
+                    Log.d("RoomTAG", "insert: $saveData")
+
+                }
             }
         }
     }
@@ -32,9 +39,18 @@ class RoomViewModel (
                 _articles.value = RoomResource.Loading()
                 try {
                     val result = roomRepository.getList()
-                    _articles.value = RoomResource.Success(result)
+                    if (result.isNotEmpty()){
+                        _articles.value=RoomResource.Success(result)
+                        Log.d("RoomTAG", "getList: $result")
+                    } else{
+                        _articles.value=RoomResource.Loading()
+                        _articles.value=RoomResource.Error(result.toString())
+                        Log.d("RoomTAG", "getList: ")
+                    }
                 } catch (e: Exception) {
                     _articles.value = RoomResource.Error(e.message ?: "Unknown error")
+                    Log.d("RoomTAG", "${e.message}: ")
+
                 }
             }
 

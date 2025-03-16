@@ -14,6 +14,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,6 +29,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -40,6 +42,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -60,11 +63,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
 import com.google.gson.Gson
-import com.task.newsfeedapp.R
 import com.task.newsfeedapp.component.CircularLoader
 import com.task.newsfeedapp.component.LinearLoader
 import com.task.newsfeedapp.component.formatTime
@@ -72,13 +72,13 @@ import com.task.newsfeedapp.dao.RoomDao
 import com.task.newsfeedapp.factory.RoomViewModelFactory
 import com.task.newsfeedapp.factory.ViewModelFactory
 import com.task.newsfeedapp.model.ArticleResponse
+import com.task.newsfeedapp.model.RoomModel
 import com.task.newsfeedapp.mvvm.repository.ArticleRepo
-import com.task.newsfeedapp.mvvm.viewmodel.ArticleViewModel
 import com.task.newsfeedapp.mvvm.repository.RoomRepository
+import com.task.newsfeedapp.mvvm.viewmodel.ArticleViewModel
 import com.task.newsfeedapp.mvvm.viewmodel.RoomViewModel
-import com.task.newsfeedapp.network.ApiService
+import com.task.newsfeedapp.network.NetworkClient
 import com.task.newsfeedapp.resource.RoomResource
-import com.task.newsfeedapp.utils.Utils
 
 /**
  * SANTHOSH
@@ -170,8 +170,9 @@ fun TabContent(tabIndex: Int, article: List<ArticleResponse>, navController: Nav
 fun FeedsScreen(navController: NavController) {
     val context = LocalContext.current
     var showDialog by remember { mutableStateOf(false) }
+    var webpage by remember { mutableStateOf(false) }
     var backgroundImageUri by remember { mutableStateOf<Uri?>(null) }
-
+    var webPageUrl = ""
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
@@ -192,7 +193,7 @@ fun FeedsScreen(navController: NavController) {
 
     val viewModel: ArticleViewModel = viewModel(
         factory = ViewModelFactory(
-            ArticleRepo(ApiService.NetworkClient.apiService), context
+            ArticleRepo(NetworkClient.apiService), context
         )
     )
     val articleItems = viewModel.articlePager.collectAsLazyPagingItems()
@@ -215,7 +216,7 @@ fun FeedsScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(0.8f)
-                    .background(Color.White)
+                    .background(Color.Magenta)
             ) {
                 items(articleItems.itemCount) { articleItem ->
                     Log.d("TAG", "FeedsScreen: $articleItem")
@@ -223,48 +224,61 @@ fun FeedsScreen(navController: NavController) {
                     val articleJson = Uri.encode(Gson().toJson(docs))
                     val imageUrl = docs?.multimedia?.firstOrNull()?.url.let { it }
                     Log.d("imageUrl", "imageUrl: $imageUrl")
+                    webPageUrl = docs?.webUrl.toString()
+
 
                     Column(modifier = Modifier
                         .padding(16.dp)
                         .fillMaxWidth()
+                        .background(Color.White)
                         .clickable {
                             navController.navigate("ArticleDetailScreen/$articleJson")
                         }) {
-                        Text(
-                            text = docs?.newsDesk.toString(),
-                            style = MaterialTheme.typography.titleLarge,
-                            color = Color.Black,
-                            fontWeight = FontWeight.Bold
-                        )
-
-                        Text(
-                            text = docs?.snippet.toString(),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.Black
-                        )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-                        AsyncImage(
-                            model = ImageRequest.Builder(LocalContext.current)
-                                .data(imageUrl)
-                                .crossfade(true)
-                                .error(R.drawable.ic_launcher_foreground) // Fallback image in case of an error
-                                .build(),
-                            contentDescription = "Feed Image",
+                        Card(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .height(200.dp)
-                                .clip(RoundedCornerShape(8.dp))
-                                .background(Color.LightGray),
-                            contentScale = ContentScale.Crop
-                        )
+                                .padding(10.dp)
+                                .background(Color.White)
+                        ) {
+                            Image(
+                                painter = rememberAsyncImagePainter("https://www.nytimes.com/$imageUrl"),
+                                contentDescription = "Article Image",
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(200.dp)
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(Color.LightGray),
+                                contentScale = ContentScale.Crop
+                            )
+//                            AsyncImage(
+//                                model = ImageRequest.Builder(LocalContext.current)
+//                                    .data("https://www.nytimes.com/$imageUrl")
+//                                    .crossfade(true)
+//                                    .error(R.drawable.ic_launcher_foreground) // Fallback image in case of an error
+//                                    .build(),
+//                                contentDescription = "Feed Image",
+//                                modifier = Modifier
+//                                    .fillMaxWidth()
+//                                    .height(200.dp)
+//                                    .clip(RoundedCornerShape(8.dp))
+//                                    .background(Color.LightGray),
+//                                contentScale = ContentScale.Crop
+//                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = docs?.snippet.toString(),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = Color.Black,
+                                fontWeight = FontWeight.Bold
+                            )
 
-                        Spacer(Modifier.heightIn(10.dp))
-                        Text(
-                            text = formatTime(docs?.pubDate),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = Color.Black
-                        )
+                            Spacer(Modifier.heightIn(10.dp))
+                            Text(
+                                text = formatTime(docs?.pubDate),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Color.Black, modifier = Modifier.padding(10.dp)
+                            )
+                        }
+
                     }
                 }
 
@@ -300,25 +314,30 @@ fun FeedsScreen(navController: NavController) {
                     .background(Color.White),
                 contentAlignment = Alignment.Center
             ) {
-                Button(
-                    onClick = {
-                        showDialog = true
-                    },
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .height(50.dp),
-                    shape = RoundedCornerShape(18.dp),
+                Row {
+                    Button(
+                        onClick = {
+                            showDialog = true
+                        },
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .height(50.dp),
+                        shape = RoundedCornerShape(18.dp),
 
 
-                    colors = ButtonDefaults.buttonColors(Color.Gray)
-                ) {
-                    Text("Change Background", color = Color.White)
+                        colors = ButtonDefaults.buttonColors(Color.Gray)
+                    ) {
+                        Text("Change Background", color = Color.White)
+                    }
                 }
+
                 if (showDialog) {
+
                     ShowImagePickerDialog(onDismiss = { showDialog = false },
                         onPickGallery = { galleryLauncher.launch("image/*") },
                         onCapturePhoto = { cameraLauncher.launch(null) })
                 }
+
             }
         }
     }
@@ -391,6 +410,12 @@ fun BookmarksScreen() {
     val factory = remember { RoomViewModelFactory(repo) }
     val roomViewModel: RoomViewModel = viewModel(factory = factory)
 
+    LaunchedEffect(Unit) {
+        roomViewModel.getList()
+
+    }
+
+
     val resource = roomViewModel.articles.collectAsState(initial = RoomResource.Loading())
     when (val result = resource.value) {
         is RoomResource.Loading -> {
@@ -400,52 +425,9 @@ fun BookmarksScreen() {
         }
 
         is RoomResource.Success -> {
+            GetShowRoomData(result.data)
             Log.d("room", "ArticleScreen: Success")
-            val articles = result.data
-            Log.d("TAG", "BookmarksScreen: $articles")
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(articles) { roomModel ->
-                    Log.d("BookmarksScreen", "BookmarksScreen: $roomModel")
-                    Column(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .fillMaxWidth()
-                    ) {
-                        Text(
-                            text = roomModel.newsDesk.toString(),
-                            style = MaterialTheme.typography.titleLarge,
-                            color = Color.Black,
-                            fontWeight = FontWeight.Bold
-                        )
 
-                        Text(
-                            text = roomModel.snippet.toString(),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.Black
-                        )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Image(
-                            painter = rememberAsyncImagePainter(roomModel.uri),
-                            contentDescription = "Feed Image",
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(200.dp)
-                                .clip(RoundedCornerShape(8.dp))
-                                .background(Color.LightGray),
-                            contentScale = ContentScale.Crop
-                        )
-
-                        Spacer(Modifier.heightIn(10.dp))
-
-                        Text(
-                            text = formatTime(roomModel.pubDate),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = Color.Black
-                        )
-                    }
-                }
-            }
         }
 
         is RoomResource.Error -> {
@@ -454,4 +436,58 @@ fun BookmarksScreen() {
     }
 }
 
+
+@Composable
+fun GetShowRoomData(data: List<RoomModel>) {
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
+        items(data){
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    text = it.newsDesk.toString(),
+                    style = MaterialTheme.typography.titleLarge,
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Text(
+                    text = it.snippet.toString(),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.Black
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+                Log.d(
+                    "RoomImg",
+                    "BookmarksScreen: \"https://www.nytimes.com/${it.uri}"
+                )
+                Image(
+                    painter = rememberAsyncImagePainter("https://www.nytimes.com/${it.imageUrl}"),
+                    contentDescription = "Feed Image",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(Color.LightGray),
+                    contentScale = ContentScale.Crop
+                )
+
+                Spacer(Modifier.heightIn(10.dp))
+
+                Text(
+                    text = formatTime(it.pubDate),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.Black
+                )
+            }
+
+        }
+
+
+
+    }
+}
 

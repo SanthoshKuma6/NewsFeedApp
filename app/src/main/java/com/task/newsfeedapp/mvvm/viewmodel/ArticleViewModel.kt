@@ -1,5 +1,6 @@
 package com.task.newsfeedapp.mvvm.viewmodel
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -9,8 +10,8 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.task.newsfeedapp.model.ArticleResponse
 import com.task.newsfeedapp.mvvm.repository.ArticleRepo
+import com.task.newsfeedapp.network.NetworkClient.apiService
 import com.task.newsfeedapp.resource.Response
-import com.task.newsfeedapp.network.ApiService.NetworkClient.apiService
 import com.task.newsfeedapp.resource.ArticlePagingSource
 import com.task.newsfeedapp.utils.NetworkMonitor
 import com.task.newsfeedapp.utils.Utils
@@ -19,10 +20,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class ArticleViewModel(private val articleRepo: ArticleRepo, val context: Context) : ViewModel() {
+class ArticleViewModel(private val articleRepo: ArticleRepo, @SuppressLint("StaticFieldLeak") val context: Context) : ViewModel() {
     val articlePager = Pager(
         config = PagingConfig(
-            pageSize = 10, // Adjust based on API
+            pageSize = 1, // Adjust based on API
             enablePlaceholders = false
         ),
         pagingSourceFactory = { ArticlePagingSource(apiService) }

@@ -2,11 +2,14 @@ package com.task.newsfeedapp.screens
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.net.Uri
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,11 +18,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -34,7 +39,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import coil.compose.rememberAsyncImagePainter
+import com.task.newsfeedapp.component.AnimatedLoader
+import com.task.newsfeedapp.component.CircularLoader
 import com.task.newsfeedapp.component.calculateReadTimeWithDateCheck
 import com.task.newsfeedapp.component.formatTime
 import com.task.newsfeedapp.model.ArticleResponse
@@ -53,6 +62,12 @@ fun ArticleDetailScreen(
 ) {
     val context = LocalContext.current as? Activity
     var auth = ""
+    var imageUrl=""
+    for (i in article!!.multimedia){
+        imageUrl = i.url.toString()
+        Log.d("ImageTAG", "ArticleDetailScreen: $imageUrl")
+
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -79,19 +94,50 @@ fun ArticleDetailScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        article?.let {
-
+        article.let {
             Spacer(modifier = Modifier.height(8.dp))
-            Image(
-                painter = rememberAsyncImagePainter(it.uri),
-                contentDescription = "Article Image",
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)
                     .clip(RoundedCornerShape(8.dp))
                     .background(Color.LightGray),
-                contentScale = ContentScale.Crop
-            )
+                contentAlignment = Alignment.Center // Ensures loader is centered
+            ) {
+                SubcomposeAsyncImage(
+                    model = "https://www.nytimes.com/$imageUrl",
+                    contentDescription = "Article Image",
+                    loading = {
+                        AnimatedLoader()
+                    },
+                    error = {
+                        Text(text = "Failed to load image", color = Color.Red)
+                    },
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+            }
+
+//            AsyncImage(
+//                model = "https://www.nytimes.com/$imageUrl",
+//                contentDescription = "Article Image",
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(200.dp)
+//                    .clip(RoundedCornerShape(8.dp))
+//                    .background(Color.LightGray),
+//                contentScale = ContentScale.Crop
+//            )
+//            Image(
+//                painter = rememberAsyncImagePainter("https://www.nytimes.com/$imageUrl"),
+//                contentDescription = "Article Image",
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(200.dp)
+//                    .clip(RoundedCornerShape(8.dp))
+//                    .background(Color.LightGray),
+//                contentScale = ContentScale.Crop
+//            )
 
             Spacer(modifier = Modifier.height(10.dp))
             Text(
