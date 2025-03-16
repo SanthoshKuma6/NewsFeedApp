@@ -12,6 +12,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.task.newsfeedapp.navigation.MyNavHost
 import com.task.newsfeedapp.ui.theme.NewsFeedAppTheme
 
+
+/**
+ * SANTHOSH
+ */
 class MainActivity : ComponentActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)

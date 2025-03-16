@@ -34,15 +34,18 @@ import com.task.newsfeedapp.dao.RoomDao
 import com.task.newsfeedapp.factory.RoomViewModelFactory
 import com.task.newsfeedapp.factory.ViewModelFactory
 import com.task.newsfeedapp.model.RoomModel
-import com.task.newsfeedapp.mvvm.ArticleRepo
-import com.task.newsfeedapp.mvvm.ArticleViewModel
-import com.task.newsfeedapp.mvvm.Response
-import com.task.newsfeedapp.mvvm.RoomRepository
-import com.task.newsfeedapp.mvvm.RoomViewModel
+import com.task.newsfeedapp.mvvm.repository.ArticleRepo
+import com.task.newsfeedapp.mvvm.viewmodel.ArticleViewModel
+import com.task.newsfeedapp.resource.Response
+import com.task.newsfeedapp.mvvm.repository.RoomRepository
+import com.task.newsfeedapp.mvvm.viewmodel.RoomViewModel
 import com.task.newsfeedapp.network.ApiService
 import com.task.newsfeedapp.utils.Utils.api_key
 
 
+/**
+ * SANTHOSH
+ */
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun ArticleScreen(navController: NavController) {
@@ -68,7 +71,7 @@ fun ArticleScreen(navController: NavController) {
         if (!isConnected){
             if (wasOffline){
                 Toast.makeText(context, "You're back online. Refreshing data.", Toast.LENGTH_SHORT).show()
-                viewModel.getArticleList(api_key, page)
+                viewModel.getArticleList(page, api_key)
             }
             wasOffline = false
         } else {

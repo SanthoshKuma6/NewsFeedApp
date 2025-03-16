@@ -1,4 +1,4 @@
-package com.task.newsfeedapp.mvvm
+package com.task.newsfeedapp.mvvm.viewmodel
 
 import android.content.Context
 import android.util.Log
@@ -8,6 +8,8 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.task.newsfeedapp.model.ArticleResponse
+import com.task.newsfeedapp.mvvm.repository.ArticleRepo
+import com.task.newsfeedapp.resource.Response
 import com.task.newsfeedapp.network.ApiService.NetworkClient.apiService
 import com.task.newsfeedapp.resource.ArticlePagingSource
 import com.task.newsfeedapp.utils.NetworkMonitor
@@ -18,7 +20,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class ArticleViewModel(private val articleRepo: ArticleRepo, val context: Context) : ViewModel() {
-
     val articlePager = Pager(
         config = PagingConfig(
             pageSize = 10, // Adjust based on API
@@ -39,7 +40,7 @@ class ArticleViewModel(private val articleRepo: ArticleRepo, val context: Contex
             networkMonitor.isConnected.collectLatest { connected ->
                 _isConnected.value = connected
                 if (connected) {
-                    getArticleList(Utils.api_key, 1)
+                    getArticleList( 1,Utils.api_key,)
                 }
 
             }
@@ -47,7 +48,7 @@ class ArticleViewModel(private val articleRepo: ArticleRepo, val context: Contex
 
     }
 
-    fun getArticleList(key: String, page: Int) {
+    fun getArticleList( page: Int,key: String,) {
         viewModelScope.launch {
             if (!_isConnected.value) {
                 _articleState.value = Response.Error("You're offline. Showing cached data.")
@@ -56,19 +57,19 @@ class ArticleViewModel(private val articleRepo: ArticleRepo, val context: Contex
 
             _articleState.value = Response.Loading(true)
             try {
-                val data = articleRepo.getArticle(key, page)
+                val data = articleRepo.getArticle(page,key)
                 if (data.isSuccessful) {
-                    Log.d("TAG", "isSuccessful: ${data.isSuccessful}")
+                    Log.d("responseTAG", "isSuccessful: ${data.isSuccessful}")
                     _articleState.value = Response.Loading(false)
                     _articleState.value = Response.Success(data.body())
                 } else {
                     _articleState.value = Response.Loading(false)
                     _articleState.value = Response.Error(data.message())
-                    Log.d("TAG", "Error: ${data.isSuccessful}")
+                    Log.d("responseTAG", "Error: ${data.isSuccessful}")
 
                 }
             } catch (e: Exception) {
-                Log.d("TAG", "Exception: ${e.message}")
+                Log.d("responseTAG", "Exception: ${e.message}")
             }
 
         }

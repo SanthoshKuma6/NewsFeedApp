@@ -1,9 +1,9 @@
-package com.task.newsfeedapp.mvvm
+package com.task.newsfeedapp.mvvm.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.task.newsfeedapp.model.RoomModel
+import com.task.newsfeedapp.mvvm.repository.RoomRepository
 import com.task.newsfeedapp.resource.RoomResource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,7 +12,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class RoomViewModel (
-    private val roomRepository : RoomRepository) : ViewModel() {
+    private val roomRepository : RoomRepository
+) : ViewModel() {
 
     fun insert(saveData: List<RoomModel>)  {
         viewModelScope.launch {
@@ -28,9 +29,9 @@ class RoomViewModel (
     fun getList() {
         viewModelScope.launch {
             withContext(Dispatchers.IO){
-                _articles.value = RoomResource.Loading() // Optional, show loading initially
+                _articles.value = RoomResource.Loading()
                 try {
-                    val result = roomRepository.getList() // Fetch the data
+                    val result = roomRepository.getList()
                     _articles.value = RoomResource.Success(result)
                 } catch (e: Exception) {
                     _articles.value = RoomResource.Error(e.message ?: "Unknown error")

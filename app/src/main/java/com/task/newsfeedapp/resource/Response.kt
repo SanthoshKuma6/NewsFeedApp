@@ -1,4 +1,4 @@
-package com.task.newsfeedapp.mvvm
+package com.task.newsfeedapp.resource
 
 sealed class Response<T>(
     val data: T? = null,

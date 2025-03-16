@@ -1,4 +1,4 @@
-package com.task.newsfeedapp.mvvm
+package com.task.newsfeedapp.mvvm.repository
 
 import com.task.newsfeedapp.dao.RoomDao
 import com.task.newsfeedapp.model.RoomModel

@@ -33,7 +33,6 @@ class NetworkMonitor(context: Context) {
             .build()
         connectivityManager.registerNetworkCallback(networkRequest, networkCallback)
 
-        // Initial network check
         _isConnected.value = checkInternetConnection()
     }
 

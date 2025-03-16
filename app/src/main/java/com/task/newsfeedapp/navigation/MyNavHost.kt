@@ -11,8 +11,8 @@ import androidx.navigation.navArgument
 import com.google.gson.Gson
 import com.task.newsfeedapp.model.ArticleResponse
 import com.task.newsfeedapp.screens.ArticleDetailScreen
-import com.task.newsfeedapp.screens.ArticleListScreen
 import com.task.newsfeedapp.screens.ArticleScreen
+import com.task.newsfeedapp.screens.ChangeBackgroundScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -22,14 +22,9 @@ fun MyNavHost() {
         composable("ArticleScreen") {
             ArticleScreen(navController)
         }
-//        composable("ArticleListScreen") {
-//            ArticleListScreen(navController = navController)
-//        }
-//        composable("ArticleDetailScreen/{articleId}") { backStackEntry ->
-//            val articleId = backStackEntry.arguments?.getString("articleId")
-//            ArticleDetailScreen(navController, articleId)
-//        }
-
+        composable("ChangeBackgroundScreen") {
+            ChangeBackgroundScreen(navController)
+        }
         composable(
             "ArticleDetailScreen/{articleJson}",
             arguments = listOf(navArgument("articleJson") { type = NavType.StringType })
