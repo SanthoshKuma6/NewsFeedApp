@@ -15,13 +15,15 @@ object NetworkClient {
         .dns(Dns.SYSTEM)
         .addInterceptor(loggingInterceptor)
         .build()
-    private val retrofit: Retrofit by lazy {
+
+    val retrofit: Retrofit by lazy {
         Retrofit.Builder()
-            .baseUrl(Utils.BASE_URL)
+            .baseUrl(Utils.BASE_URL)  // Ensure BuildConfig is accessible
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()
     }
+
     val apiService: ApiService by lazy {
         retrofit.create(ApiService::class.java)
     }

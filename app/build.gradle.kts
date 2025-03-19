@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     kotlin("kapt")
-    id ("kotlin-parcelize")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -21,12 +21,19 @@ android {
     }
 
     buildTypes {
+
         release {
             isMinifyEnabled = false
+            android.buildFeatures.buildConfig = true
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
+//            buildConfigField("String", "BASE_URL", "https://api.nytimes.com/")
+        }
+        debug {
+            android.buildFeatures.buildConfig = true
+            buildConfigField ("String", "BASE_URL", "\"https://api.nytimes.com/\"")
+
         }
     }
     compileOptions {
@@ -104,7 +111,7 @@ dependencies {
     implementation("androidx.room:room-runtime:2.4.2")
     implementation("androidx.room:room-ktx:2.4.2")
     annotationProcessor("androidx.room:room-compiler:2.4.2")
-    kapt ("androidx.room:room-compiler:2.4.3")
+    kapt("androidx.room:room-compiler:2.4.3")
 
     // Compose Runtime (needed for Compose-based projects)
     implementation("androidx.compose.runtime:runtime:1.4.0")
