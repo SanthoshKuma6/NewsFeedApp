@@ -1,12 +1,8 @@
-dvent of Code Kotlin Template
-Advent of Code – an annual event in December since 2015. Every year since then, with the first day of December, a programming puzzles contest is published every day for twenty-five days. A set of Christmas-oriented challenges provides any input you have to use to answer using the language of your choice. We offer you a template prepared to use with Kotlin language within this repository.
 
 
 
-Live Streams
-Join us as we solve the Advent of Code challenges live on stream! Follow along to see step-by-step solutions, participate in problem-solving, and learn new strategies to tackle the puzzles. Whether you're stuck on a particular problem or just looking to improve your Kotlin skills, our live streams are here to help.
 
-Watch the live streams here!
+
 
 
 
