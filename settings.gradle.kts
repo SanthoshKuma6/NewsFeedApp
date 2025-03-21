@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "NewsFeedApp"
 include(":app")
- 
+include(":nativelib")

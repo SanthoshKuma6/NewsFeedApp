@@ -1,4 +1,4 @@
-package com.task.newsfeedapp
+package com.task.newsfeedapp.activity
 
 import android.annotation.SuppressLint
 import android.os.Build

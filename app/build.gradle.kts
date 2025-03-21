@@ -18,6 +18,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
     }
 
     buildTypes {
@@ -33,9 +34,20 @@ android {
         debug {
             android.buildFeatures.buildConfig = true
             buildConfigField ("String", "BASE_URL", "\"https://api.nytimes.com/\"")
-
+            buildConfigField ("String", "Saved_Signature", "\"0252d7582af33c37d50155a0ec3420d911fc085e\"")
+//            externalNativeBuild {
+//                cmake {
+//                    cppFlags
+//
+//                }
+//            }
         }
+
+
+
+
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -45,6 +57,12 @@ android {
     }
     buildFeatures {
         compose = true
+    }
+
+    externalNativeBuild {
+        cmake {
+            path = file("src/main/cpp/CMakeLists.txt")
+        }
     }
 }
 
@@ -121,5 +139,8 @@ dependencies {
 
 
     implementation("androidx.paging:paging-compose:3.2.0")
+
+    implementation("com.scottyab:rootbeer-lib:0.1.0")
+
 
 }
