@@ -23,8 +23,12 @@ android {
 
     buildTypes {
 
+        /**
+         * False is best for debug builds.
+         * True is best for release builds.
+         */
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = false // true when application is launch
             android.buildFeatures.buildConfig = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
@@ -33,14 +37,70 @@ android {
         }
         debug {
             android.buildFeatures.buildConfig = true
+            isDebuggable=true
+            isMinifyEnabled=false // true when application is launch
+            isShrinkResources=false  // true when application is launch
             buildConfigField ("String", "BASE_URL", "\"https://api.nytimes.com/\"")
             buildConfigField ("String", "Saved_Signature", "\"0252d7582af33c37d50155a0ec3420d911fc085e\"")
+            buildConfigField ("boolean", "IS_DEV", "true")
+            buildConfigField ("boolean", "IS_QA", "false")
+            buildConfigField ("boolean", "IS_UAT", "false")
+            buildConfigField ("boolean", "IS_LIVE", "false")
 //            externalNativeBuild {
 //                cmake {
 //                    cppFlags
 //
 //                }
 //            }
+        }
+        flavorDimensions += listOf("customer","environment")
+        productFlavors{
+            create("dev"){
+                dimension="environment"
+                applicationIdSuffix = ".dev"
+                versionNameSuffix = "-dev"
+                buildConfigField("String","BASE_URL","\"https://api.nytimes.com1\"")
+                buildConfigField ("boolean", "IS_DEV", "true")
+                buildConfigField ("boolean", "IS_QA", "false")
+                buildConfigField ("boolean", "IS_UAT", "false")
+                buildConfigField ("boolean", "IS_LIVE", "false")
+
+            }
+            create("qa"){
+                dimension="environment"
+                applicationIdSuffix = ".qa"
+                versionNameSuffix = "-qa"
+                buildConfigField("String","BASE_URL","\"https://api.nytimes.com2\"")
+                buildConfigField ("boolean", "IS_DEV", "false")
+                buildConfigField ("boolean", "IS_QA", "true")
+                buildConfigField ("boolean", "IS_UAT", "false")
+                buildConfigField ("boolean", "IS_LIVE", "false")
+
+            }
+            create("uat"){
+                dimension="environment"
+                applicationIdSuffix = ".uat"
+                versionNameSuffix = "-uat"
+                buildConfigField("String","BASE_URL","\"https://api.nytimes.com3\"")
+                buildConfigField ("boolean", "IS_DEV", "false")
+                buildConfigField ("boolean", "IS_QA", "false")
+                buildConfigField ("boolean", "IS_UAT", "true")
+                buildConfigField ("boolean", "IS_LIVE", "false")
+
+            }
+            create("production"){
+                dimension="customer"
+                applicationIdSuffix = ".production"
+                versionNameSuffix = "-production"
+                buildConfigField("String","BASE_URL","\"https://api.nytimes.com4\"")
+                buildConfigField ("boolean", "IS_DEV", "false")
+                buildConfigField ("boolean", "IS_QA", "false")
+                buildConfigField ("boolean", "IS_UAT", "false")
+                buildConfigField ("boolean", "IS_LIVE", "true")
+
+            }
+
+
         }
 
 

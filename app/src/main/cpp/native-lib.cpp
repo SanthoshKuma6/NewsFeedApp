@@ -11,6 +11,9 @@ baseurl = "https://api.nytimes.com/";
 #ifdef UAT
 baseurl = "https://api.nytimes.com/";
 #endif
+#ifdef QA
+baseurl = "https://api.nytimes.com/";
+#endif
 #ifdef DEVELOPMENT
 baseurl = "https://api.nytimes.com/";
 #endif
