@@ -33,7 +33,8 @@ android {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
-//            buildConfigField("String", "BASE_URL", "https://api.nytimes.com/")
+            buildConfigField("String", "BASE_URL", "https://api.nytimes.com/")
+            signingConfig = signingConfigs.getByName("debug")
         }
         debug {
             android.buildFeatures.buildConfig = true
@@ -56,6 +57,10 @@ android {
         flavorDimensions += listOf("customer","environment")
         productFlavors{
             create("dev"){
+
+                externalNativeBuild.cmake{
+                    cppFlags("-DDEVELOPMENT")
+                }
                 dimension="environment"
                 applicationIdSuffix = ".dev"
                 versionNameSuffix = "-dev"
@@ -67,6 +72,9 @@ android {
 
             }
             create("qa"){
+//                externalNativeBuild.cmake{
+//                    cppFlags("-DQA")
+//                }
                 dimension="environment"
                 applicationIdSuffix = ".qa"
                 versionNameSuffix = "-qa"
@@ -78,6 +86,11 @@ android {
 
             }
             create("uat"){
+//                externalNativeBuild {
+//                    cmake {
+//                        cppFlags("UAT")
+//                    }
+//                }
                 dimension="environment"
                 applicationIdSuffix = ".uat"
                 versionNameSuffix = "-uat"
@@ -89,6 +102,11 @@ android {
 
             }
             create("production"){
+//                externalNativeBuild {
+//                    cmake {
+//                        cppFlags("production")
+//                    }
+//                }
                 dimension="customer"
                 applicationIdSuffix = ".production"
                 versionNameSuffix = "-production"
@@ -201,6 +219,8 @@ dependencies {
     implementation("androidx.paging:paging-compose:3.2.0")
 
     implementation("com.scottyab:rootbeer-lib:0.1.0")
+
+    implementation("com.google.accompanist:accompanist-swiperefresh:0.33.2-alpha")
 
 
 }

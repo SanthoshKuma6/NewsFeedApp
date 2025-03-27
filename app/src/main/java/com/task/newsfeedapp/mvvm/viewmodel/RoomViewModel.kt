@@ -1,6 +1,9 @@
 package com.task.newsfeedapp.mvvm.viewmodel
 
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.task.newsfeedapp.model.RoomModel
@@ -56,5 +59,16 @@ class RoomViewModel (
 
         }
     }
+    var selectedRoom by mutableStateOf<RoomModel?>(null)
+
+    fun getArticleById(id: String): RoomModel? {
+        val articleId = id.toIntOrNull() ?: return null
+        return articles.value.let { resource ->
+            if (resource is RoomResource.Success) {
+                resource.data.find { it.id == articleId }
+            } else null
+        }
+    }
+
 
 }

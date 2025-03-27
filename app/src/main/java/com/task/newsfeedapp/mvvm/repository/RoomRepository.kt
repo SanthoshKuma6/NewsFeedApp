@@ -2,6 +2,7 @@ package com.task.newsfeedapp.mvvm.repository
 
 import com.task.newsfeedapp.dao.RoomDao
 import com.task.newsfeedapp.model.RoomModel
+import kotlinx.coroutines.flow.Flow
 
 
 class RoomRepository(private val roomDao: RoomDao?) {
