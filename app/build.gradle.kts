@@ -4,6 +4,9 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     kotlin("kapt")
     id("kotlin-parcelize")
+    id("com.google.gms.google-services")
+    id("com.google.dagger.hilt.android")
+    id("kotlin-kapt")
 }
 
 android {
@@ -38,15 +41,17 @@ android {
         }
         debug {
             android.buildFeatures.buildConfig = true
-            isDebuggable=true
-            isMinifyEnabled=false // true when application is launch
-            isShrinkResources=false  // true when application is launch
-            buildConfigField ("String", "BASE_URL", "\"https://api.nytimes.com/\"")
-            buildConfigField ("String", "Saved_Signature", "\"0252d7582af33c37d50155a0ec3420d911fc085e\"")
-            buildConfigField ("boolean", "IS_DEV", "true")
-            buildConfigField ("boolean", "IS_QA", "false")
-            buildConfigField ("boolean", "IS_UAT", "false")
-            buildConfigField ("boolean", "IS_LIVE", "false")
+            isDebuggable = true
+            isMinifyEnabled = false // true when application is launch
+            isShrinkResources = false  // true when application is launch
+            buildConfigField("String", "BASE_URL", "\"https://api.nytimes.com/\"")
+            buildConfigField(
+                "String", "Saved_Signature", "\"0252d7582af33c37d50155a0ec3420d911fc085e\""
+            )
+            buildConfigField("boolean", "IS_DEV", "true")
+            buildConfigField("boolean", "IS_QA", "false")
+            buildConfigField("boolean", "IS_UAT", "false")
+            buildConfigField("boolean", "IS_LIVE", "false")
 //            externalNativeBuild {
 //                cmake {
 //                    cppFlags
@@ -54,74 +59,72 @@ android {
 //                }
 //            }
         }
-        flavorDimensions += listOf("customer","environment")
-        productFlavors{
-            create("dev"){
+        flavorDimensions += listOf("customer", "environment")
+        productFlavors {
+            create("dev") {
 
-                externalNativeBuild.cmake{
+                externalNativeBuild.cmake {
                     cppFlags("-DDEVELOPMENT")
                 }
-                dimension="environment"
-                applicationIdSuffix = ".dev"
+                dimension = "environment"
+//                applicationIdSuffix = ".dev"
                 versionNameSuffix = "-dev"
-                buildConfigField("String","BASE_URL","\"https://api.nytimes.com1\"")
-                buildConfigField ("boolean", "IS_DEV", "true")
-                buildConfigField ("boolean", "IS_QA", "false")
-                buildConfigField ("boolean", "IS_UAT", "false")
-                buildConfigField ("boolean", "IS_LIVE", "false")
+                buildConfigField("String", "BASE_URL", "\"https://api.nytimes.com1\"")
+                buildConfigField("boolean", "IS_DEV", "true")
+                buildConfigField("boolean", "IS_QA", "false")
+                buildConfigField("boolean", "IS_UAT", "false")
+                buildConfigField("boolean", "IS_LIVE", "false")
 
             }
-            create("qa"){
+            create("qa") {
 //                externalNativeBuild.cmake{
 //                    cppFlags("-DQA")
 //                }
-                dimension="environment"
-                applicationIdSuffix = ".qa"
+                dimension = "environment"
+//                applicationIdSuffix = ".qa"
                 versionNameSuffix = "-qa"
-                buildConfigField("String","BASE_URL","\"https://api.nytimes.com2\"")
-                buildConfigField ("boolean", "IS_DEV", "false")
-                buildConfigField ("boolean", "IS_QA", "true")
-                buildConfigField ("boolean", "IS_UAT", "false")
-                buildConfigField ("boolean", "IS_LIVE", "false")
+                buildConfigField("String", "BASE_URL", "\"https://api.nytimes.com2\"")
+                buildConfigField("boolean", "IS_DEV", "false")
+                buildConfigField("boolean", "IS_QA", "true")
+                buildConfigField("boolean", "IS_UAT", "false")
+                buildConfigField("boolean", "IS_LIVE", "false")
 
             }
-            create("uat"){
+            create("uat") {
 //                externalNativeBuild {
 //                    cmake {
 //                        cppFlags("UAT")
 //                    }
 //                }
-                dimension="environment"
-                applicationIdSuffix = ".uat"
+                dimension = "environment"
+//                applicationIdSuffix = ".uat"
                 versionNameSuffix = "-uat"
-                buildConfigField("String","BASE_URL","\"https://api.nytimes.com3\"")
-                buildConfigField ("boolean", "IS_DEV", "false")
-                buildConfigField ("boolean", "IS_QA", "false")
-                buildConfigField ("boolean", "IS_UAT", "true")
-                buildConfigField ("boolean", "IS_LIVE", "false")
+                buildConfigField("String", "BASE_URL", "\"https://api.nytimes.com3\"")
+                buildConfigField("boolean", "IS_DEV", "false")
+                buildConfigField("boolean", "IS_QA", "false")
+                buildConfigField("boolean", "IS_UAT", "true")
+                buildConfigField("boolean", "IS_LIVE", "false")
 
             }
-            create("production"){
+            create("production") {
 //                externalNativeBuild {
 //                    cmake {
 //                        cppFlags("production")
 //                    }
 //                }
-                dimension="customer"
-                applicationIdSuffix = ".production"
+                dimension = "customer"
+//                applicationIdSuffix = ".production"
                 versionNameSuffix = "-production"
-                buildConfigField("String","BASE_URL","\"https://api.nytimes.com4\"")
-                buildConfigField ("boolean", "IS_DEV", "false")
-                buildConfigField ("boolean", "IS_QA", "false")
-                buildConfigField ("boolean", "IS_UAT", "false")
-                buildConfigField ("boolean", "IS_LIVE", "true")
+                buildConfigField("String", "BASE_URL", "\"https://api.nytimes.com4\"")
+                buildConfigField("boolean", "IS_DEV", "false")
+                buildConfigField("boolean", "IS_QA", "false")
+                buildConfigField("boolean", "IS_UAT", "false")
+                buildConfigField("boolean", "IS_LIVE", "true")
 
             }
 
 
         }
-
-
 
 
     }
@@ -154,6 +157,9 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.firebase.database.ktx)
+    implementation(libs.androidx.runtime.livedata)
+    implementation(libs.generativeai)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -221,6 +227,32 @@ dependencies {
     implementation("com.scottyab:rootbeer-lib:0.1.0")
 
     implementation("com.google.accompanist:accompanist-swiperefresh:0.33.2-alpha")
+
+    implementation(platform("com.google.firebase:firebase-bom:33.11.0"))
+    implementation("com.google.firebase:firebase-analytics")
+
+    // messaging
+    implementation("com.google.firebase:firebase-messaging:24.1.1")
+    implementation("com.google.firebase:firebase-messaging-ktx:24.1.1")
+
+    // notification permission
+    implementation("com.google.accompanist:accompanist-permissions:0.31.1-alpha")
+
+    // dagger
+    implementation("com.google.dagger:hilt-android:2.48")
+    kapt("com.google.dagger:hilt-compiler:2.48")
+
+    implementation("androidx.compose.material:material:1.7.8")
+    //payment gate way
+    implementation("com.razorpay:checkout:1.6.41")
+
+    // sdk
+     implementation("io.agora.rtc:full-sdk:4.0.1")
+     implementation("io.agora.rtm:rtm-sdk:1.5.0")
+     implementation("commons-codec:commons-codec:1.17.1")
+
+
+
 
 
 }

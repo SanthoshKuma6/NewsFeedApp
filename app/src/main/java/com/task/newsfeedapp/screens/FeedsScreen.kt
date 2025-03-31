@@ -27,7 +27,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -54,6 +56,7 @@ import com.task.newsfeedapp.model.RoomModel
 import com.task.newsfeedapp.mvvm.repository.ArticleRepo
 import com.task.newsfeedapp.mvvm.repository.RoomRepository
 import com.task.newsfeedapp.mvvm.viewmodel.ArticleViewModel
+import com.task.newsfeedapp.mvvm.viewmodel.MainViewModel
 import com.task.newsfeedapp.mvvm.viewmodel.RoomViewModel
 import com.task.newsfeedapp.network.NetworkClient
 import com.task.newsfeedapp.resource.Response
@@ -74,6 +77,9 @@ fun FeedsScreen(navController: NavController) {
             ArticleRepo(NetworkClient.apiService, RoomDao.getDatabase(context)), context
         )
     )
+
+
+
     val isConnected by viewModel.isConnected.collectAsStateWithLifecycle()
     Surface(
         modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
@@ -104,7 +110,6 @@ fun FeedsScreen(navController: NavController) {
 
             is Response.Success -> {
                 isLoading = false
-
 
                 val roomDataList: List<RoomModel> = result.data!!.response!!.docs.map { doc ->
 
@@ -162,6 +167,7 @@ fun InsertRoomData(roomDataList: List<RoomModel>) {
 
 
 }
+
 @Composable
 fun FeedScreenResponseUI(
     data: List<ArticleResponse.Legacy.Multimedia.Headline.Keywords.Person.Byline.Docs>,
@@ -182,7 +188,9 @@ fun FeedScreenResponseUI(
             ) {
                 items(data) { articleItem ->
                     Log.d("TAG", "Success Result: $articleItem")
-                    val articleJson = Uri.encode(Gson().toJson(articleItem))
+                    val articleJson = remember { Uri.encode(Gson().toJson(articleItem)) }
+
+//                    val articleJson = Uri.encode(Gson().toJson(articleItem))
                     Log.d("feedscreen", "FeedScreenResponseUI: $articleJson")
                     val imageUrl = articleItem.multimedia.firstOrNull()?.url
                     Log.d("imageUrl", "imageUrl: $imageUrl")
@@ -193,7 +201,10 @@ fun FeedScreenResponseUI(
                             .fillMaxWidth()
                             .background(Color.White)
                             .clickable {
-                                navController.navigate("ArticleDetailScreen/$articleJson")
+
+                                    navController.navigate("ArticleDetailScreen/$articleJson")
+
+                                Log.d("ta", "FeedScreenResponseUI: Clicked")
                             }) {
                         Card(
                             modifier = Modifier

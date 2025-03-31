@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">NewsFeedApp</string>
     <string name="title_activity_splash">SplashActivity</string>
+    <string name="default_notification_channel_id">FIREBASE_NEW</string>
+    <string name="title_activity_notifications">NotificationsActivity</string>
+
 </resources>

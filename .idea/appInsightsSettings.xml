@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.task.newsfeedapp" />
+                  <option name="mobileSdkAppId" value="1:243148538399:android:93eb0cc56b668bbe888b2a" />
+                  <option name="projectId" value="truebroker-370205" />
+                  <option name="projectNumber" value="243148538399" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

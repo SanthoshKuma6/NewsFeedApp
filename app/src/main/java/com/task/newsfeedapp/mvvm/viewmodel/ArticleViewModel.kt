@@ -3,6 +3,8 @@ package com.task.newsfeedapp.mvvm.viewmodel
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
@@ -10,6 +12,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.task.newsfeedapp.model.ArticleResponse
 import com.task.newsfeedapp.model.RoomModel
+import com.task.newsfeedapp.model.fcm.NotificationModel
 import com.task.newsfeedapp.mvvm.repository.ArticleRepo
 import com.task.newsfeedapp.network.NetworkClient.apiService
 import com.task.newsfeedapp.resource.Response
@@ -102,5 +105,14 @@ val _isRefreshing = MutableStateFlow(false)
 
         }
     }
+
+    private val _notification = MutableStateFlow<NotificationModel?>(null)
+    val notification: StateFlow<NotificationModel?> get() = _notification
+
+    fun setNotification(notification: NotificationModel?) {
+        _notification.value = notification
+        Log.d("TAG", "setNotification: $notification")
+    }
+
 
 }

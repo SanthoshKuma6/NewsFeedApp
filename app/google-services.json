@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "243148538399",
+    "firebase_url": "https://truebroker-370205-default-rtdb.firebaseio.com",
+    "project_id": "truebroker-370205",
+    "storage_bucket": "truebroker-370205.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:243148538399:android:93eb0cc56b668bbe888b2a",
+        "android_client_info": {
+          "package_name": "com.task.newsfeedapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "243148538399-fiok4kba2is6pjbbf6sedgaq16dj7n3l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.task.newsfeedapp",
+            "certificate_hash": "0252d7582af33c37d50155a0ec3420d911fc085e"
+          }
+        },
+        {
+          "client_id": "243148538399-1o02eegdqg5v14pu5584tg34946obkkh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArhsPe9Z01ICwdkVFgelYunOkxgC2b-Cc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "243148538399-1o02eegdqg5v14pu5584tg34946obkkh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

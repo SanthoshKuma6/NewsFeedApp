@@ -33,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 
 /**
  * SANTHOSH
@@ -40,7 +41,7 @@ import androidx.navigation.NavController
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ArticleList(navController: NavController) {
+fun ArticleList(navController: NavHostController) {
     val searchQuery = remember { mutableStateOf("") }
     val tabIndex = remember { mutableIntStateOf(0) }
     val tabs = listOf("Feeds", "Bookmarks")

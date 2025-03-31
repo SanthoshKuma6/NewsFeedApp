@@ -14,14 +14,38 @@ import com.task.newsfeedapp.model.RoomModel
 import com.task.newsfeedapp.screens.ArticleDetailScreen
 import com.task.newsfeedapp.screens.ArticleScreen
 import com.task.newsfeedapp.screens.RoomDetailedScreen
+import com.task.newsfeedapp.screens.home_screens.BottomSheetNavigationApp
+import com.task.newsfeedapp.screens.home_screens.ChatScreen
+import com.task.newsfeedapp.screens.home_screens.HomeScreen
+import com.task.newsfeedapp.screens.login_screesn.LoginScreen
+import com.task.newsfeedapp.screens.login_screesn.OtpVerificationScreen
+import com.task.newsfeedapp.screens.login_screesn.VerificationSuccess
 
-@RequiresApi(Build.VERSION_CODES.O)
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun MyNavHost() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "ArticleScreen") {
+    NavHost(navController = navController, startDestination = "LoginScreen") {
+        composable("LoginScreen") {
+            LoginScreen(navController)
+        }
+        composable("OtpVerificationScreen") {
+            OtpVerificationScreen(navController)
+        }
+        composable("VerificationSuccess") {
+            VerificationSuccess(navController)
+        }
+        composable("BottomSheetNavigationApp") {
+            BottomSheetNavigationApp()
+        }
         composable("ArticleScreen") {
             ArticleScreen(navController)
+        }
+        composable("HomeScreen") {
+            HomeScreen(navController)
+        }
+        composable("ChatScreen") {
+            ChatScreen(navController)
         }
         composable(
             "ArticleDetailScreen/{articleJson}",
@@ -40,7 +64,6 @@ fun MyNavHost() {
         composable("RoomDetailedScreen/{roomJson}", arguments = listOf(navArgument("roomJson") {
             type = NavType.StringType
         })) { backStackEntry ->
-
             val json = backStackEntry.arguments?.getString("roomJson")
             val roomArticle = json!!.let { Gson().fromJson(it, RoomModel::class.java) }
             RoomDetailedScreen( navController,listOf(roomArticle))
