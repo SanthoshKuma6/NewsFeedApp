@@ -1,5 +1,6 @@
 package com.task.newsfeedapp.component.login_component
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.content.MediaType.Companion.Text
@@ -67,7 +68,7 @@ fun CountryCodeTextField() {
                 modifier = Modifier
                     .height(56.dp), // Match OutlinedTextField height
                 shape = fieldShape, // Apply same shape
-                border = BorderStroke(1.dp, Color.Gray) ,
+                border = BorderStroke(1.dp, Color.Gray),
                 colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.White) // Set inside color to white
 
 
@@ -115,7 +116,59 @@ fun CountryCodeTextField() {
     }
 }
 
+@SuppressLint("SuspiciousIndentation")
+@Composable
+fun EmailTextField(value: String, onValueChange: ( String)->Unit){
+    val fieldShape = RoundedCornerShape(12.dp) // Common shape for both elements
+    OutlinedTextField(
+        value = value,
+        onValueChange = { onValueChange(it) },
+        placeholder = { Text("Enter email") }, // Placeholder instead of label
+        modifier = Modifier
+            .fillMaxWidth(1f)
+            .height(56.dp), // Ensures same height
+        shape = fieldShape, // Apply same shape
+        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
+        singleLine = true, // Prevents vertical expansion
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = Color.White, // Background when focused
+            unfocusedContainerColor = Color.White, // Background when not focused
+            focusedBorderColor = Color.Blue, // Border color when focused
+            unfocusedBorderColor = Color.Gray, // Border color when not focused
+            cursorColor = Color.Black, // Cursor color
+            focusedTextColor = Color.Black, // Text color inside the field
+            unfocusedTextColor = Color.Black
+        )
+    )
 
+}
+
+
+@Composable
+fun PasswordTextField(value: String,onValueChange: (String) -> Unit) {
+    val fieldShape = RoundedCornerShape(12.dp) // Common shape for both elements
+    // Phone Number Field
+    OutlinedTextField(
+        value = value,
+        onValueChange = { onValueChange(it) },
+        placeholder = { Text("Enter your Password") }, // Placeholder instead of label
+        modifier = Modifier
+            .fillMaxWidth(1f)
+            .height(56.dp), // Ensures same height
+        shape = fieldShape, // Apply same shape
+        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Phone),
+        singleLine = true, // Prevents vertical expansion
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = Color.White, // Background when focused
+            unfocusedContainerColor = Color.White, // Background when not focused
+            focusedBorderColor = Color.Blue, // Border color when focused
+            unfocusedBorderColor = Color.Gray, // Border color when not focused
+            cursorColor = Color.Black, // Cursor color
+            focusedTextColor = Color.Black, // Text color inside the field
+            unfocusedTextColor = Color.Black
+        )
+    )
+}
 
 
 @Composable
@@ -178,7 +231,8 @@ fun OtpInputBox(otpValue: String, onOtpChange: (String) -> Unit) {
                     if (newValue.length <= 1 && newValue.all { it.isDigit() }) {
                         val newOtp = otpValue.toMutableList()
                         if (newValue.isNotEmpty()) {
-                            if (newOtp.size > i) newOtp[i] = newValue[0] else newOtp.add(newValue[0])
+                            if (newOtp.size > i) newOtp[i] =
+                                newValue[0] else newOtp.add(newValue[0])
                             if (i < 3) focusRequesters[i + 1].requestFocus()
                         } else {
                             if (newOtp.size > i) newOtp.removeAt(i)

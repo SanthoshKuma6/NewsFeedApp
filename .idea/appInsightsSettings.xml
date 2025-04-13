@@ -9,9 +9,9 @@
               <option name="connection">
                 <ConnectionSetting>
                   <option name="appId" value="com.task.newsfeedapp" />
-                  <option name="mobileSdkAppId" value="1:243148538399:android:93eb0cc56b668bbe888b2a" />
-                  <option name="projectId" value="truebroker-370205" />
-                  <option name="projectNumber" value="243148538399" />
+                  <option name="mobileSdkAppId" value="1:451313811553:android:aa498fcd0ca83c11476a20" />
+                  <option name="projectId" value="newsfeedapp-f0957" />
+                  <option name="projectNumber" value="451313811553" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

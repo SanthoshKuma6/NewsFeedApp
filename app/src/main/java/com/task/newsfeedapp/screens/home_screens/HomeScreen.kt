@@ -2,6 +2,7 @@ package com.task.newsfeedapp.screens.home_screens
 
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
@@ -26,10 +27,15 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,11 +50,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.task.newsfeedapp.R
+import com.task.newsfeedapp.mvvm.viewmodel.AuthState
+import com.task.newsfeedapp.mvvm.viewmodel.AuthViewModel
+import com.task.newsfeedapp.navigation.OnboardingNavigationObject
 import com.task.newsfeedapp.screens.payment.StartPayment
 
 @Composable
-fun HomeScreen(navController: NavHostController) {
+fun HomeScreen(navController: NavHostController,authViewModel: AuthViewModel) {
     val context = LocalContext.current
+    val authState = authViewModel.authState.observeAsState()
+    LaunchedEffect(authState.value) {
+        when (authState.value) {
+            is AuthState.UnAuthenticated -> navController.navigate(OnboardingNavigationObject.LOGIN_SCREEN)
+            else -> Unit
+        }
+    }
     Surface(modifier = Modifier
         .fillMaxSize()) {
 
@@ -58,7 +74,7 @@ fun HomeScreen(navController: NavHostController) {
                 .background(color = colorResource(R.color.home_background))
                 .verticalScroll(rememberScrollState())
         ) {
-            HeaderSection()
+            HeaderSection(authViewModel,navController)
             Spacer(Modifier.height(20.dp))
             HoroscopeSection()
             ServiceSection()
@@ -68,7 +84,8 @@ fun HomeScreen(navController: NavHostController) {
 }
 
 @Composable
-fun HeaderSection() {
+fun HeaderSection(authViewModel: AuthViewModel,navController: NavHostController) {
+
     Box(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -92,8 +109,8 @@ fun HeaderSection() {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(150.dp), // Match image height
-                    contentAlignment = Alignment.Center // Center content inside
+                        .height(150.dp),
+                    contentAlignment = Alignment.Center
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
@@ -111,11 +128,32 @@ fun HeaderSection() {
                         )
                     }
                 }
+
+                // Logout icon at the top right corner
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(150.dp)
+                        .padding(16.dp),
+                    contentAlignment = Alignment.TopEnd
+                ) {
+                    IconButton(onClick = {
+//                        authViewModel.logout()
+                        navController.navigate(OnboardingNavigationObject.LOGIN_SCREEN)
+
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.ExitToApp,
+                            contentDescription = "Logout",
+                            tint = Color.White
+                        )
+                    }
+                }
             }
         }
-
     }
 }
+
 
 
 @Composable
@@ -304,5 +342,5 @@ fun AstrologerCard(imageRes: Int, name: String, onConnectClick: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun CallPreviewProfileCard() {
-    HomeScreen(navController = NavHostController(LocalContext.current))
+    HomeScreen(navController = NavHostController(LocalContext.current), authViewModel = AuthViewModel())
 }

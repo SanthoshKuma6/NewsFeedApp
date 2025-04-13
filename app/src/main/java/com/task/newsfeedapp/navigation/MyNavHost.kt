@@ -6,11 +6,13 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.gson.Gson
 import com.task.newsfeedapp.model.ArticleResponse
 import com.task.newsfeedapp.model.RoomModel
+import com.task.newsfeedapp.mvvm.viewmodel.AuthViewModel
 import com.task.newsfeedapp.screens.ArticleDetailScreen
 import com.task.newsfeedapp.screens.ArticleScreen
 import com.task.newsfeedapp.screens.RoomDetailedScreen
@@ -19,30 +21,44 @@ import com.task.newsfeedapp.screens.home_screens.ChatScreen
 import com.task.newsfeedapp.screens.home_screens.HomeScreen
 import com.task.newsfeedapp.screens.login_screesn.LoginScreen
 import com.task.newsfeedapp.screens.login_screesn.OtpVerificationScreen
+import com.task.newsfeedapp.screens.login_screesn.SignUpScreen
 import com.task.newsfeedapp.screens.login_screesn.VerificationSuccess
+
+object OnboardingNavigationObject {
+    const val LOGIN_SCREEN = "LoginScreen"
+    const val SIGNUP_SCREEN = "SignUpScreen"
+    const val OTP_SCREEN = "OtpVerificationScreen"
+    const val OTP_SUCCESS_SCREEN = "VerificationSuccess"
+    const val BOTTOM_SHEET_SCREEN = "BottomSheetNavigationApp"
+
+}
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
-fun MyNavHost() {
+fun MyNavHost(authViewModel: AuthViewModel) {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "LoginScreen") {
-        composable("LoginScreen") {
-            LoginScreen(navController)
+    NavHost(navController = navController, startDestination = OnboardingNavigationObject.LOGIN_SCREEN) {
+        composable(OnboardingNavigationObject.LOGIN_SCREEN) {
+            LoginScreen(navController, authViewModel = AuthViewModel())
         }
-        composable("OtpVerificationScreen") {
+        composable(OnboardingNavigationObject.SIGNUP_SCREEN) {
+            SignUpScreen(navController,authViewModel)
+
+        }
+        composable(OnboardingNavigationObject.OTP_SCREEN) {
             OtpVerificationScreen(navController)
         }
-        composable("VerificationSuccess") {
+        composable(OnboardingNavigationObject.OTP_SUCCESS_SCREEN) {
             VerificationSuccess(navController)
         }
-        composable("BottomSheetNavigationApp") {
-            BottomSheetNavigationApp()
+        composable(OnboardingNavigationObject.BOTTOM_SHEET_SCREEN) {
+            BottomSheetNavigationApp(navController,authViewModel)
         }
         composable("ArticleScreen") {
             ArticleScreen(navController)
         }
         composable("HomeScreen") {
-            HomeScreen(navController)
+            HomeScreen(navController,authViewModel)
         }
         composable("ChatScreen") {
             ChatScreen(navController)

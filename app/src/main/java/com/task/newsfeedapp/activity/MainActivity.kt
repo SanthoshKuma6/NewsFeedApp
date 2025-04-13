@@ -9,6 +9,7 @@ import androidx.activity.compose.setContent
 import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessaging
 import com.razorpay.PaymentResultListener
+import com.task.newsfeedapp.mvvm.viewmodel.AuthViewModel
 import com.task.newsfeedapp.navigation.MyNavHost
 import com.task.newsfeedapp.screens.agora.AgoraChatManager
 import com.task.newsfeedapp.ui.theme.NewsFeedAppTheme
@@ -37,7 +38,7 @@ class MainActivity : ComponentActivity() , PaymentResultListener {
             // Code that requires API 26+
             setContent {
                 NewsFeedAppTheme {
-                    MyNavHost()
+                    MyNavHost(authViewModel = AuthViewModel())
                     fetchFCMToken()
 
 

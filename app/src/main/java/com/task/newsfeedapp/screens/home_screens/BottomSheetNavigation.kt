@@ -1,6 +1,7 @@
 package com.task.newsfeedapp.screens.home_screens
 
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -17,10 +18,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -29,6 +33,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.task.newsfeedapp.mvvm.viewmodel.AuthState
+import com.task.newsfeedapp.mvvm.viewmodel.AuthViewModel
+import com.task.newsfeedapp.navigation.OnboardingNavigationObject
 import com.task.newsfeedapp.screens.ArticleDetailScreen
 import com.task.newsfeedapp.screens.ArticleList
 import com.task.newsfeedapp.screens.ArticleScreen
@@ -106,7 +113,8 @@ import java.util.Locale
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomSheetNavigationApp() {
+fun BottomSheetNavigationApp(navController: NavController,authViewModel: AuthViewModel) {
+
     val sheetState = rememberModalBottomSheetState()
     var showSheet by remember { mutableStateOf(false) }
     var selectedScreen by remember { mutableStateOf("home") } // Manage screen manually
@@ -116,7 +124,7 @@ fun BottomSheetNavigationApp() {
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
             when (selectedScreen) {
-                "home" -> HomeScreen(navController = NavHostController(LocalContext.current))
+                "home" -> HomeScreen(navController = NavHostController(LocalContext.current),authViewModel)
                 "chat" -> ChatScreen(navController = NavHostController(LocalContext.current))
                 "call" -> ArticleList(navController = NavHostController(LocalContext.current))
             }
