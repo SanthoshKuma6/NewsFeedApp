@@ -59,72 +59,72 @@ android {
 //                }
 //            }
         }
-        flavorDimensions += listOf("customer", "environment")
-        productFlavors {
-            create("dev") {
-
-                externalNativeBuild.cmake {
-                    cppFlags("-DDEVELOPMENT")
-                }
-                dimension = "environment"
-//                applicationIdSuffix = ".dev"
-                versionNameSuffix = "-dev"
-                buildConfigField("String", "BASE_URL", "\"https://api.nytimes.com1\"")
-                buildConfigField("boolean", "IS_DEV", "true")
-                buildConfigField("boolean", "IS_QA", "false")
-                buildConfigField("boolean", "IS_UAT", "false")
-                buildConfigField("boolean", "IS_LIVE", "false")
-
-            }
-            create("qa") {
-//                externalNativeBuild.cmake{
-//                    cppFlags("-DQA")
+//        flavorDimensions += listOf("customer", "environment")
+//        productFlavors {
+//            create("dev") {
+//
+//                externalNativeBuild.cmake {
+//                    cppFlags("-DDEVELOPMENT")
 //                }
-                dimension = "environment"
-//                applicationIdSuffix = ".qa"
-                versionNameSuffix = "-qa"
-                buildConfigField("String", "BASE_URL", "\"https://api.nytimes.com2\"")
-                buildConfigField("boolean", "IS_DEV", "false")
-                buildConfigField("boolean", "IS_QA", "true")
-                buildConfigField("boolean", "IS_UAT", "false")
-                buildConfigField("boolean", "IS_LIVE", "false")
-
-            }
-            create("uat") {
-//                externalNativeBuild {
-//                    cmake {
-//                        cppFlags("UAT")
-//                    }
-//                }
-                dimension = "environment"
-//                applicationIdSuffix = ".uat"
-                versionNameSuffix = "-uat"
-                buildConfigField("String", "BASE_URL", "\"https://api.nytimes.com3\"")
-                buildConfigField("boolean", "IS_DEV", "false")
-                buildConfigField("boolean", "IS_QA", "false")
-                buildConfigField("boolean", "IS_UAT", "true")
-                buildConfigField("boolean", "IS_LIVE", "false")
-
-            }
-            create("production") {
-//                externalNativeBuild {
-//                    cmake {
-//                        cppFlags("production")
-//                    }
-//                }
-                dimension = "customer"
-//                applicationIdSuffix = ".production"
-                versionNameSuffix = "-production"
-                buildConfigField("String", "BASE_URL", "\"https://api.nytimes.com4\"")
-                buildConfigField("boolean", "IS_DEV", "false")
-                buildConfigField("boolean", "IS_QA", "false")
-                buildConfigField("boolean", "IS_UAT", "false")
-                buildConfigField("boolean", "IS_LIVE", "true")
-
-            }
-
-
-        }
+//                dimension = "environment"
+////                applicationIdSuffix = ".dev"
+//                versionNameSuffix = "-dev"
+//                buildConfigField("String", "BASE_URL", "\"https://api.nytimes.com1\"")
+//                buildConfigField("boolean", "IS_DEV", "true")
+//                buildConfigField("boolean", "IS_QA", "false")
+//                buildConfigField("boolean", "IS_UAT", "false")
+//                buildConfigField("boolean", "IS_LIVE", "false")
+//
+//            }
+//            create("qa") {
+////                externalNativeBuild.cmake{
+////                    cppFlags("-DQA")
+////                }
+//                dimension = "environment"
+////                applicationIdSuffix = ".qa"
+//                versionNameSuffix = "-qa"
+//                buildConfigField("String", "BASE_URL", "\"https://api.nytimes.com2\"")
+//                buildConfigField("boolean", "IS_DEV", "false")
+//                buildConfigField("boolean", "IS_QA", "true")
+//                buildConfigField("boolean", "IS_UAT", "false")
+//                buildConfigField("boolean", "IS_LIVE", "false")
+//
+//            }
+//            create("uat") {
+////                externalNativeBuild {
+////                    cmake {
+////                        cppFlags("UAT")
+////                    }
+////                }
+//                dimension = "environment"
+////                applicationIdSuffix = ".uat"
+//                versionNameSuffix = "-uat"
+//                buildConfigField("String", "BASE_URL", "\"https://api.nytimes.com3\"")
+//                buildConfigField("boolean", "IS_DEV", "false")
+//                buildConfigField("boolean", "IS_QA", "false")
+//                buildConfigField("boolean", "IS_UAT", "true")
+//                buildConfigField("boolean", "IS_LIVE", "false")
+//
+//            }
+//            create("production") {
+////                externalNativeBuild {
+////                    cmake {
+////                        cppFlags("production")
+////                    }
+////                }
+//                dimension = "customer"
+////                applicationIdSuffix = ".production"
+//                versionNameSuffix = "-production"
+//                buildConfigField("String", "BASE_URL", "\"https://api.nytimes.com4\"")
+//                buildConfigField("boolean", "IS_DEV", "false")
+//                buildConfigField("boolean", "IS_QA", "false")
+//                buildConfigField("boolean", "IS_UAT", "false")
+//                buildConfigField("boolean", "IS_LIVE", "true")
+//
+//            }
+//
+//
+//        }
 
 
     }
@@ -251,6 +251,13 @@ dependencies {
      implementation("io.agora.rtc:full-sdk:4.0.1")
      implementation("io.agora.rtm:rtm-sdk:1.5.0")
      implementation("commons-codec:commons-codec:1.17.1")
+
+
+    val appcompat_version = "1.7.0"
+
+    implementation("androidx.appcompat:appcompat:$appcompat_version")
+    // For loading and tinting drawables on older versions of the platform
+    implementation("androidx.appcompat:appcompat-resources:$appcompat_version")
 
 
 

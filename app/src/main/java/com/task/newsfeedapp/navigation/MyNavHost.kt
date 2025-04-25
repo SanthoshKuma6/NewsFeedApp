@@ -6,16 +6,17 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.gson.Gson
+import com.task.newsfeedapp.base.SplashViewModel
 import com.task.newsfeedapp.model.ArticleResponse
 import com.task.newsfeedapp.model.RoomModel
 import com.task.newsfeedapp.mvvm.viewmodel.AuthViewModel
 import com.task.newsfeedapp.screens.ArticleDetailScreen
 import com.task.newsfeedapp.screens.ArticleScreen
 import com.task.newsfeedapp.screens.RoomDetailedScreen
+import com.task.newsfeedapp.screens.agora.AgoraChatScreen
 import com.task.newsfeedapp.screens.home_screens.BottomSheetNavigationApp
 import com.task.newsfeedapp.screens.home_screens.ChatScreen
 import com.task.newsfeedapp.screens.home_screens.HomeScreen
@@ -30,12 +31,16 @@ object OnboardingNavigationObject {
     const val OTP_SCREEN = "OtpVerificationScreen"
     const val OTP_SUCCESS_SCREEN = "VerificationSuccess"
     const val BOTTOM_SHEET_SCREEN = "BottomSheetNavigationApp"
+    const val AGORA_CHAT_SCREEN="AgoraChatScreen"
 
 }
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun MyNavHost(authViewModel: AuthViewModel) {
+//    val splashViewModel = authViewModel as? SplashViewModel
+//            ?: throw IllegalStateException("Invalid ViewModel Type")
+
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = OnboardingNavigationObject.LOGIN_SCREEN) {
         composable(OnboardingNavigationObject.LOGIN_SCREEN) {
@@ -62,6 +67,9 @@ fun MyNavHost(authViewModel: AuthViewModel) {
         }
         composable("ChatScreen") {
             ChatScreen(navController)
+        }
+        composable(OnboardingNavigationObject.AGORA_CHAT_SCREEN) {
+            AgoraChatScreen(navController)
         }
         composable(
             "ArticleDetailScreen/{articleJson}",

@@ -16,12 +16,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 
 @Composable
-fun AgoraChatScreen(chatManager: AgoraChatManager) {
+fun AgoraChatScreen(navController: NavHostController) {
     val messages = remember { mutableStateListOf<String>() }
     var message by remember { mutableStateOf("") }
+    var chatManager = AgoraChatManager(LocalContext.current,"")
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         LazyColumn(modifier = Modifier.weight(1f)) {

@@ -40,6 +40,7 @@ import com.task.newsfeedapp.screens.ArticleDetailScreen
 import com.task.newsfeedapp.screens.ArticleList
 import com.task.newsfeedapp.screens.ArticleScreen
 import com.task.newsfeedapp.screens.RoomDetailedScreen
+import com.task.newsfeedapp.screens.agora.AgoraChatScreen
 import java.util.Locale
 //
 //@RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -126,7 +127,7 @@ fun BottomSheetNavigationApp(navController: NavController,authViewModel: AuthVie
             when (selectedScreen) {
                 "home" -> HomeScreen(navController = NavHostController(LocalContext.current),authViewModel)
                 "chat" -> ChatScreen(navController = NavHostController(LocalContext.current))
-                "call" -> ArticleList(navController = NavHostController(LocalContext.current))
+                "call" -> AgoraChatScreen(navController = NavHostController(LocalContext.current))
             }
         }
     }

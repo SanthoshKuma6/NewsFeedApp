@@ -22,6 +22,7 @@ class AuthViewModel : ViewModel() {
         }
     }
 
+    @SuppressLint("SuspiciousIndentation")
     fun login(email: String, password: String) {
         if (email.isEmpty() || password.isEmpty()){
           _authState.value=  AuthState.Error("email and password is cant empty")

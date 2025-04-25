@@ -138,8 +138,8 @@ fun HeaderSection(authViewModel: AuthViewModel,navController: NavHostController)
                     contentAlignment = Alignment.TopEnd
                 ) {
                     IconButton(onClick = {
-//                        authViewModel.logout()
-                        navController.navigate(OnboardingNavigationObject.LOGIN_SCREEN)
+                        authViewModel.logout()
+//                        navController.navigate(OnboardingNavigationObject.LOGIN_SCREEN)
 
                     }) {
                         Icon(
