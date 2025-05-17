@@ -2,6 +2,9 @@ package com.task.newsfeedapp.base
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.task.newsfeedapp.base.model.Resource
+import com.task.newsfeedapp.base.model.ViewModelResponse
+import io.reactivex.disposables.CompositeDisposable
 
 abstract class BaseViewModel(
     schedulerProvider: SchedulerProvider,

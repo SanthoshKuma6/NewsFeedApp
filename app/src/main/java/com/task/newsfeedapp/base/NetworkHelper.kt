@@ -1,18 +1,19 @@
 package com.task.newsfeedapp.base
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.net.http.HttpException
 import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresExtension
-import androidx.credentials.exceptions.domerrors.NetworkError
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonSyntaxException
+import com.task.newsfeedapp.base.utils.NetworkError
+import retrofit2.HttpException
 import java.io.IOException
 import java.net.ConnectException
 import javax.inject.Singleton
+
 
 @Singleton
 class NetworkHelper(private val context: Context) {
@@ -20,7 +21,7 @@ class NetworkHelper(private val context: Context) {
         private const val TAG = "NetworkHelper"
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
+    @SuppressLint("ServiceCast")
     fun isNetworkConnected(): Boolean {
         val manager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
         val capabilities = manager?.getNetworkCapabilities(manager.activeNetwork) ?: return false

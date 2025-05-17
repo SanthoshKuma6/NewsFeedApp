@@ -4,4 +4,18 @@
     <string name="default_notification_channel_id">FIREBASE_NEW</string>
     <string name="title_activity_notifications">NotificationsActivity</string>
 
+
+
+
+    <string name="network_server_not_available" translatable="false">Our services are under maintenance, please retry after some time
+</string>
+    <string name="server_connection_error" translatable="false">Not able to connect, please retry again</string>
+    <string name="my_dashboard">My Dashboard</string>
+    <string name="internet_connection_error" translatable="false">Please check your internet connection</string>
+    <string name="unable_to_load_the_image" translatable="false">"Sorry! Unable to load the content."</string>
+    <string name="unable_to_load_the_data" translatable="false">"Sorry! Unable to get the data."</string>
+    <string name="data_not_available" translatable="false">"Sorry! There is no content available."</string>
+    <string name="network_default_error" translatable="false">Something wrong happened, please retry again</string>
+    <string name="dsv_ex_msg_dont_set_lm" translatable="false">You should not set LayoutManager on DiscreteScrollView.class instance. Library uses a special one. Just don\'t call the method.</string>
+
 </resources>

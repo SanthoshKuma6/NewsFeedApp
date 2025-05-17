@@ -2,4 +2,8 @@
 <resources>
 
     <style name="Theme.NewsFeedApp" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="CustomDialogTheme">
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
 </resources>

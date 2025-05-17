@@ -2,14 +2,12 @@ package com.task.newsfeedapp.base
 
 import android.app.Application
 import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
+import com.task.newsfeedapp.base.component.ApplicationComponent
 
 open class BaseApplication : Application() {
     lateinit var applicationComponent: ApplicationComponent
 
-    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate() {
         super.onCreate()
         injectDependencies()

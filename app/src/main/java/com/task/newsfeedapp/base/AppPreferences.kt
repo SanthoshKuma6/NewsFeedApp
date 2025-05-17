@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
+import androidx.core.content.edit
 
 
 @Singleton
@@ -20,9 +21,9 @@ class AppPreferences @Inject constructor(private val prefs: SharedPreferences) {
     }
 
 
-    fun isValidString(key:String,value:String): Boolean {
+    fun isValidString(key:String,value:String): Any {
         return try {
-            return prefs.edit().putString(key,value).commit()
+            return prefs.edit(commit = true) { putString(key, value) }
         } catch (e: IOException) {
             false
         } catch (e: Exception) {
@@ -74,12 +75,12 @@ class AppPreferences @Inject constructor(private val prefs: SharedPreferences) {
     }
 
     fun setAppInstallationID(installationId: String) {
-        prefs.edit().putString(APP_INSTALLATION_ID, installationId).apply()
+        prefs.edit() { putString(APP_INSTALLATION_ID, installationId) }
     }
 
 
     fun setAccessToken(accessToken: String) {
-        prefs.edit().putString(ACCESS_TOKEN, accessToken).apply()
+        prefs.edit() { putString(ACCESS_TOKEN, accessToken) }
     }
 
     fun getAccessToken(): String? {
@@ -87,7 +88,7 @@ class AppPreferences @Inject constructor(private val prefs: SharedPreferences) {
     }
 
     fun setRefreshToken(refreshToken: String) {
-        prefs.edit().putString(REFRESH_TOKEN, refreshToken).apply()
+        prefs.edit() { putString(REFRESH_TOKEN, refreshToken) }
     }
 
     fun getRefreshToken(): String? {
@@ -95,7 +96,7 @@ class AppPreferences @Inject constructor(private val prefs: SharedPreferences) {
     }
 
     fun setRefreshTokenExpire(refreshTokenExpire: Long) {
-        prefs.edit().putLong(REFRESH_TOKEN_EXPIRE, refreshTokenExpire).apply()
+        prefs.edit() { putLong(REFRESH_TOKEN_EXPIRE, refreshTokenExpire) }
     }
 
     fun getRefreshTokenExpire(): Long {
@@ -103,7 +104,7 @@ class AppPreferences @Inject constructor(private val prefs: SharedPreferences) {
     }
 
     fun setAccessTokenExpire(accessTokenExpire: Long) {
-        prefs.edit().putLong(ACCESS_TOKEN_EXPIRE, accessTokenExpire).apply()
+        prefs.edit() { putLong(ACCESS_TOKEN_EXPIRE, accessTokenExpire) }
     }
 
     fun getAccessTokenExpire(): Long {

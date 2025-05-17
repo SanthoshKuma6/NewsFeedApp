@@ -3,6 +3,7 @@ package com.task.newsfeedapp.base
 import androidx.activity.ComponentActivity
 import javax.inject.Inject
 import android.os.Bundle
+import com.task.newsfeedapp.base.module.ActivityModule
 import dagger.hilt.android.components.ActivityComponent
 
 abstract class ComposeBaseActivity<VIEWMODEL:BaseViewModel>:ComponentActivity() {
