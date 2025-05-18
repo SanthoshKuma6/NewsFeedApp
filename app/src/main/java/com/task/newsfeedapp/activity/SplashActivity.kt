@@ -22,6 +22,9 @@ import com.scottyab.rootbeer.RootBeer
 import com.task.newsfeedapp.utils.Utils
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
+/**
+ * SANTHOSHKUMAR
+ */
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : ComponentActivity() {

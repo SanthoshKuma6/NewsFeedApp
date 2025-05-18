@@ -14,6 +14,10 @@ import com.task.newsfeedapp.navigation.MyNavHost
 import com.task.newsfeedapp.screens.agora.AgoraChatManager
 import com.task.newsfeedapp.ui.theme.NewsFeedAppTheme
 
+/**
+ * SANTHOSHKUMAR
+ */
+
 class MainActivity : ComponentActivity() , PaymentResultListener {
     private lateinit var chatManager: AgoraChatManager
 
