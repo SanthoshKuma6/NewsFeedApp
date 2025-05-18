@@ -5,17 +5,17 @@ extern "C"
 JNIEXPORT jstring JNICALL
 Java_com_task_newsfeedapp_utils_Keys_BASEURL(JNIEnv *env, jobject thiz) {
 std::string baseurl ;
-#ifdef PRODCTION
-baseurl = "https://api.nytimes.com/production";
-#endif
-#ifdef UAT
-baseurl = "https://api.nytimes.com/uat";
-#endif
-#ifdef QA
-baseurl = "https://api.nytimes.com/qa";
-#endif
-#ifdef DEVELOPMENT
+#ifdef ENV_PROD
 baseurl = "https://api.nytimes.com/";
+#endif
+#ifdef ENV_UAT
+baseurl = "https://api.nytimes.com/";
+#endif
+#ifdef ENV_QA
+baseurl = "https://api.nytimes.com/";
+#endif
+#ifdef ENV_DEV
+baseurl = "https://api.nytimes.com/dev/";
 #endif
 return env->NewStringUTF(baseurl.c_str());
 }

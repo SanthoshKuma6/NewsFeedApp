@@ -19,9 +19,12 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
+    }
+    externalNativeBuild {
+        cmake {
+            path ("CMakeLists.txt")
+        }
     }
 
     buildTypes {
@@ -31,28 +34,21 @@ android {
          * True is best for release builds.
          */
         release {
-            isMinifyEnabled = true // true when application is launch
-            isShrinkResources = true
-            isDebuggable=false
-            android.buildFeatures.buildConfig = true
+            isMinifyEnabled = false  // 👈 Enable when launching app
+            isShrinkResources = false  // 👈 Enable to reduce APK size
+            isDebuggable = false   // 👈 Prevent debug features
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
-            buildConfigField("String", "BASE_URL", "\"https://api.nytimes.com/\"")
             signingConfig = signingConfigs.getByName("debug")
-            externalNativeBuild {
-                cmake {
-                    cppFlags
 
-                }
-            }
+
         }
         debug {
             android.buildFeatures.buildConfig = true
             isDebuggable = true
             isMinifyEnabled = false // true when application is launch
             isShrinkResources = false  // true when application is launch
-            buildConfigField("String", "BASE_URL", "\"https://api.nytimes.com/\"")
             buildConfigField(
                 "String",
                 "Saved_Signature",
@@ -62,27 +58,18 @@ android {
             buildConfigField("boolean", "IS_QA", "false")
             buildConfigField("boolean", "IS_UAT", "false")
             buildConfigField("boolean", "IS_LIVE", "false")
-            externalNativeBuild {
-                cmake {
-                    cppFlags
+            signingConfig = signingConfigs.getByName("debug")
 
-                }
-            }
         }
-        flavorDimensions ("environment")  //  Only one dimension
+        flavorDimensions("environment")  //  Only one dimension
         productFlavors {
             create("DEVELOPMENT") {
                 dimension = "environment"
                 applicationIdSuffix = ".dev"
                 versionNameSuffix = "-dev"
-                buildConfigField("String", "BASE_URL", "\"https://api.nytimes.com1\"")
-                buildConfigField("boolean", "DEVELOPMENT", "true")
-                buildConfigField("boolean", "QA", "false")
-                buildConfigField("boolean", "UAT", "false")
-                buildConfigField("boolean", "PRODCTION", "false")
                 externalNativeBuild {
                     cmake {
-                        cppFlags += "-DDEVELOPMENT"
+                        cppFlags("-DENV_DEV")
                     }
                 }
             }
@@ -90,14 +77,9 @@ android {
                 dimension = "environment"
                 applicationIdSuffix = ".qa"
                 versionNameSuffix = "-qa"
-                buildConfigField("String", "BASE_URL", "\"https://api.nytimes.com2\"")
-                buildConfigField("boolean", "DEVELOPMENT", "false")
-                buildConfigField("boolean", "QA", "true")
-                buildConfigField("boolean", "UAT", "false")
-                buildConfigField("boolean", "PRODCTION", "false")
                 externalNativeBuild {
                     cmake {
-                        cppFlags += "-DQA"
+                        cppFlags("-DENV_QA")
                     }
                 }
             }
@@ -105,14 +87,9 @@ android {
                 dimension = "environment"
                 applicationIdSuffix = ".uat"
                 versionNameSuffix = "-uat"
-                buildConfigField("String", "BASE_URL", "\"https://api.nytimes.com3\"")
-                buildConfigField("boolean", "DEVELOPMENT", "false")
-                buildConfigField("boolean", "QA", "false")
-                buildConfigField("boolean", "UAT", "true")
-                buildConfigField("boolean", "PRODCTION", "false")
                 externalNativeBuild {
                     cmake {
-                        cppFlags += "-DUAT"
+                        cppFlags("-DENV_UAT")
                     }
                 }
             }
@@ -120,14 +97,9 @@ android {
                 dimension = "environment"
                 applicationIdSuffix = ".production"
                 versionNameSuffix = "-production"
-                buildConfigField("String", "BASE_URL", "\"https://api.nytimes.com4\"")
-                buildConfigField("boolean", "DEVELOPMENT", "false")
-                buildConfigField("boolean", "QA", "false")
-                buildConfigField("boolean", "UAT", "false")
-                buildConfigField("boolean", "PRODCTION", "true")
                 externalNativeBuild {
                     cmake {
-                        cppFlags += "-DPRODCTION"
+                        cppFlags("-DENV_PROD")
                     }
                 }
             }
