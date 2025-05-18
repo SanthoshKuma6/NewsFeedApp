@@ -77,7 +77,7 @@ data class ArticleResponse (
                                 @SerializedName("snippet"          ) var snippet        : String?               = null,
                                 @SerializedName("lead_paragraph"   ) var leadParagraph  : String?               = null,
                                 @SerializedName("source"           ) var source         : String?               = null,
-                                @SerializedName("multimedia"       ) var multimedia     : ArrayList<Multimedia> = arrayListOf(),
+                                @SerializedName("multimedia"       ) var multimedia     : Multimedia ,
                                 @SerializedName("headline"         ) var headline       : Headline?             = Headline(),
                                 @SerializedName("keywords"         ) var keywords       : ArrayList<Keywords>   = arrayListOf(),
                                 @SerializedName("pub_date"         ) var pubDate        : String?               = null,

@@ -109,7 +109,7 @@ fun FeedsScreen(navController: NavController) {
                 val roomDataList: List<RoomModel> = result.data!!.response!!.docs.map { doc ->
 
 
-                    val imageUrl = doc.multimedia.firstOrNull()?.url ?: ""
+                    val imageUrl = doc.multimedia.url ?: ""
                     RoomModel(
                         webUrl = doc.webUrl,
                         abstract = doc.abstract,
@@ -184,7 +184,7 @@ fun FeedScreenResponseUI(
                     Log.d("TAG", "Success Result: $articleItem")
                     val articleJson = Uri.encode(Gson().toJson(articleItem))
                     Log.d("feedscreen", "FeedScreenResponseUI: $articleJson")
-                    val imageUrl = articleItem.multimedia.firstOrNull()?.url
+                    val imageUrl = articleItem.multimedia.url
                     Log.d("imageUrl", "imageUrl: $imageUrl")
 
                     Column(

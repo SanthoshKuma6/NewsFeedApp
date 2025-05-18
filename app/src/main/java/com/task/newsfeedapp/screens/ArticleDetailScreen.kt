@@ -133,7 +133,7 @@ fun ArticleDetailScreen(
                             contentAlignment = Alignment.Center
                         ) {
                             SubcomposeAsyncImage(
-                                model = "https://www.nytimes.com/${it.multimedia.firstOrNull()!!.url}",
+                                model = "https://www.nytimes.com/${it.multimedia.url}",
                                 contentDescription = "Article Image",
                                 loading = {
                                     AnimatedLoader()

@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.LOGGER
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
@@ -15,6 +16,7 @@ import com.task.newsfeedapp.network.NetworkClient.apiService
 import com.task.newsfeedapp.resource.Response
 import com.task.newsfeedapp.resource.ArticlePagingSource
 import com.task.newsfeedapp.resource.RoomResource
+import com.task.newsfeedapp.utils.Logger
 import com.task.newsfeedapp.utils.NetworkMonitor
 import com.task.newsfeedapp.utils.Utils
 import kotlinx.coroutines.CoroutineScope
@@ -87,17 +89,18 @@ val _isRefreshing = MutableStateFlow(false)
             try {
                 val data = articleRepo.getArticle(page, key)
                 if (data.isSuccessful) {
-                    Log.d("responseTAG", "isSuccessful: ${data.isSuccessful}")
+                    Logger.d("VIEWMODEL_TAG", "isSuccessful: ${data.isSuccessful}")
                     _articleState.value = Response.Loading(false)
                     _articleState.value = Response.Success(data.body())
                 } else {
                     _articleState.value = Response.Loading(false)
                     _articleState.value = Response.Error(data.message())
-                    Log.d("responseTAG", "Error: ${data.isSuccessful}")
+                    Logger.d("VIEWMODEL_TAG", "isSuccessful: ${data.isSuccessful}")
 
                 }
             } catch (e: Exception) {
-                Log.d("responseTAG", "Exception: ${e.message}")
+                Logger.d("VIEWMODEL_TAG", "Exception: ${e.message}")
+
             }
 
         }
