@@ -7,10 +7,10 @@ import com.task.newsfeedapp.base.model.ViewModelResponse
 import io.reactivex.disposables.CompositeDisposable
 
 abstract class BaseViewModel(
-    schedulerProvider: SchedulerProvider,
-    compositeDisposable: CompositeDisposable,
-    networkHelper: NetworkHelper,
-    commonRepository: CommonRepository
+    protected val schedulerProvider: SchedulerProvider,
+    protected val compositeDisposable: CompositeDisposable,
+    protected val networkHelper: NetworkHelper,
+    val commonRepository: CommonRepository,
 ) : ViewModel() {
     val response: MutableLiveData<ViewModelResponse> = MutableLiveData()
     val messageStringId: MutableLiveData<Resource<Int>> = MutableLiveData()
@@ -21,4 +21,5 @@ abstract class BaseViewModel(
         compositeDisposable.dispose()
         super.onCleared()
     }
+    abstract fun onCreate()
 }

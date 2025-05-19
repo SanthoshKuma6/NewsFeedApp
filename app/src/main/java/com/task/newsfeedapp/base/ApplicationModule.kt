@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.google.android.datatransport.runtime.dagger.Module
 import com.google.android.datatransport.runtime.dagger.Provides
+import com.task.newsfeedapp.base.di.ApplicationContext
 import com.task.newsfeedapp.base.network.Constants.LOGGED_USER_PREFERENCES
 import com.task.newsfeedapp.base.network.INetworkService
 import com.task.newsfeedapp.base.network.Networking

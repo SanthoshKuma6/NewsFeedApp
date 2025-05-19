@@ -9,6 +9,7 @@ import com.task.newsfeedapp.base.CommonRepository
 import com.task.newsfeedapp.base.NetworkHelper
 import com.task.newsfeedapp.base.SchedulerProvider
 import com.task.newsfeedapp.base.SplashRepository
+import com.task.newsfeedapp.base.di.ApplicationContext
 import dagger.Component
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Singleton
