@@ -71,7 +71,7 @@ fun HomeScreen(navController: NavHostController,authViewModel: AuthViewModel) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = colorResource(R.color.home_background))
+                .background(color = colorResource(R.color.teal_200))
                 .verticalScroll(rememberScrollState())
         ) {
             HeaderSection(authViewModel,navController)

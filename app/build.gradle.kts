@@ -313,8 +313,9 @@ dependencies {
 
 // Room Database
     implementation("androidx.room:room-runtime:2.4.2")
-    implementation("androidx.room:room-ktx:2.4.2")
+    implementation("androidx.room:room-ktx:2.7.1")
     ksp("androidx.room:room-compiler:2.7.1")
+
 //    kapt("androidx.room:room-compiler:2.4.3")
 
 
@@ -345,8 +346,7 @@ dependencies {
 
 // Additionally, plain Dagger if needed
     implementation("com.google.dagger:dagger:2.51")
-//    ksp("com.google.dagger:dagger-compiler:2.51")
-    ksp("androidx.room:room-compiler:2.5.0")
+    ksp("com.google.dagger:dagger-compiler:2.51")
 
 // Material Compose
     implementation("androidx.compose.material:material:1.7.8")

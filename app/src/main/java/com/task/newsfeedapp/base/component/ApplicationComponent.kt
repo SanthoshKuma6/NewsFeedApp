@@ -14,6 +14,7 @@ import dagger.Component
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Singleton
 
+
 @Singleton
 @Component(modules = [ApplicationModule::class])
 interface ApplicationComponent {

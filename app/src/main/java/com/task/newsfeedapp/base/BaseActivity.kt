@@ -44,7 +44,7 @@ abstract class BaseActivity<VIEWMODEL:BaseViewModel> : AppCompatActivity() {
 
     private fun buildActivityComponent() = DaggerActivityComponent.builder()
         .applicationComponent((application as BaseApplication).applicationComponent)
-        // .activityModule(ActivityModule(this))
+//         .activityModule(ActivityModule(this))
         .build()
 
 
