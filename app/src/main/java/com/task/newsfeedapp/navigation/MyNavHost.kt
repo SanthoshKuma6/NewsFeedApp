@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.gson.Gson
+import com.task.newsfeedapp.base.BaseViewModel
 import com.task.newsfeedapp.base.SplashViewModel
 import com.task.newsfeedapp.model.ArticleResponse
 import com.task.newsfeedapp.model.RoomModel
@@ -37,17 +38,17 @@ object OnboardingNavigationObject {
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
-fun MyNavHost(authViewModel: AuthViewModel) {
-//    val splashViewModel = authViewModel as? SplashViewModel
-//            ?: throw IllegalStateException("Invalid ViewModel Type")
+fun MyNavHost(authViewModel: BaseViewModel) {
+    val splashViewModel = authViewModel as? SplashViewModel
+            ?: throw IllegalStateException("Invalid ViewModel Type")
 
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = OnboardingNavigationObject.LOGIN_SCREEN) {
         composable(OnboardingNavigationObject.LOGIN_SCREEN) {
-            LoginScreen(navController, authViewModel = AuthViewModel())
+            LoginScreen(navController, splashViewModel)
         }
         composable(OnboardingNavigationObject.SIGNUP_SCREEN) {
-            SignUpScreen(navController,authViewModel)
+            SignUpScreen(navController,splashViewModel)
 
         }
         composable(OnboardingNavigationObject.OTP_SCREEN) {
@@ -57,13 +58,13 @@ fun MyNavHost(authViewModel: AuthViewModel) {
             VerificationSuccess(navController)
         }
         composable(OnboardingNavigationObject.BOTTOM_SHEET_SCREEN) {
-            BottomSheetNavigationApp(navController,authViewModel)
+            BottomSheetNavigationApp(navController,splashViewModel)
         }
         composable("ArticleScreen") {
             ArticleScreen(navController)
         }
         composable("HomeScreen") {
-            HomeScreen(navController,authViewModel)
+            HomeScreen(navController,splashViewModel)
         }
         composable("ChatScreen") {
             ChatScreen(navController)

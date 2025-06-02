@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.task.newsfeedapp.R
 import com.task.newsfeedapp.base.component.ActivityComponent
+import com.task.newsfeedapp.base.component.DaggerActivityComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -44,7 +45,7 @@ abstract class BaseActivity<VIEWMODEL:BaseViewModel> : AppCompatActivity() {
 
     private fun buildActivityComponent() = DaggerActivityComponent.builder()
         .applicationComponent((application as BaseApplication).applicationComponent)
-//         .activityModule(ActivityModule(this))
+//         .activityModule(ActivityModule(this@BaseActivity))
         .build()
 
 

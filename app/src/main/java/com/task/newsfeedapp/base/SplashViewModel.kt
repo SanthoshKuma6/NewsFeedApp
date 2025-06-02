@@ -1,5 +1,6 @@
 package com.task.newsfeedapp.base
 
+import com.task.newsfeedapp.base.rx.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
 
 class SplashViewModel(

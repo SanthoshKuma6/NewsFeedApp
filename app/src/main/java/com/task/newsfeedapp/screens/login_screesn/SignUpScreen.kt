@@ -40,15 +40,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.task.newsfeedapp.R
+import com.task.newsfeedapp.base.BaseViewModel
 import com.task.newsfeedapp.component.login_component.EmailTextField
 import com.task.newsfeedapp.component.login_component.PasswordTextField
 import com.task.newsfeedapp.component.login_component.PrivacyAndTerms
-import com.task.newsfeedapp.mvvm.viewmodel.AuthState
-import com.task.newsfeedapp.mvvm.viewmodel.AuthViewModel
 import com.task.newsfeedapp.navigation.OnboardingNavigationObject
+import com.task.newsfeedapp.utils.state.AuthState
 
 @Composable
-fun SignUpScreen(navController: NavController, authViewModel: AuthViewModel) {
+fun SignUpScreen(navController: NavController, authViewModel: BaseViewModel) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val authState = authViewModel.authState.observeAsState()

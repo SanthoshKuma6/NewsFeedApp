@@ -2,14 +2,10 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-//    kotlin("kapt")
+    alias(libs.plugins.ksp)
+//    alias(libs.plugins.kotlin.parcelize)
     id("kotlin-parcelize")
     id("com.google.gms.google-services")
-//    id("com.google.dagger.hilt.android")
-//    id("kotlin-kapt")
-    id("com.google.devtools.ksp") version "2.0.21-1.0.27"
-//    id("com.google.devtools.ksp")
-
 }
 
 android {
@@ -28,27 +24,27 @@ android {
     }
 
     buildTypes {
-
-
         /**
          * False is best for debug builds.
          * True is best for release builds.
          */
         release {
-            isMinifyEnabled = false // true when application is launch
+            isDebuggable = false
+            isMinifyEnabled = true // true when application is launch
+            isShrinkResources = true
             android.buildFeatures.buildConfig = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
-            buildConfigField("String", "BASE_URL", "https://api.nytimes.com/")
+//            buildConfigField("String", "BASE_URL", "https://api.nytimes.com/")
             signingConfig = signingConfigs.getByName("debug")
         }
         debug {
-            android.buildFeatures.buildConfig = true
             isDebuggable = true
             isMinifyEnabled = false // true when application is launch
             isShrinkResources = false  // true when application is launch
-            buildConfigField("String", "BASE_URL", "\"https://api.nytimes.com/\"")
+            android.buildFeatures.buildConfig = true
+//            buildConfigField("String", "BASE_URL", "\"https://api.nytimes.com/\"")
             buildConfigField(
                 "String", "Saved_Signature", "\"0252d7582af33c37d50155a0ec3420d911fc085e\""
             )
@@ -63,71 +59,50 @@ android {
                 }
             }
 //        }
-            flavorDimensions += listOf("customer", "environment")
+            flavorDimensions += listOf("environment")
             productFlavors {
-                create("dev") {
-
-                    externalNativeBuild.cmake {
-                        cppFlags("-DDEVELOPMENT")
-                    }
+                create("DEVELOPMENT-") {
                     dimension = "environment"
-//                applicationIdSuffix = ".dev"
+//                    applicationIdSuffix = ".dev"
                     versionNameSuffix = "-dev"
-                    buildConfigField("String", "BASE_URL", "\"https://api.nytimes.com1\"")
-                    buildConfigField("boolean", "IS_DEV", "true")
-                    buildConfigField("boolean", "IS_QA", "false")
-                    buildConfigField("boolean", "IS_UAT", "false")
-                    buildConfigField("boolean", "IS_LIVE", "false")
 
+
+                    externalNativeBuild {
+                        cmake {
+                            cppFlags("-DENV_DEV")
+                        }
+                    }
                 }
-                create("qa") {
-//                externalNativeBuild.cmake{
-//                    cppFlags("-DQA")
-//                }
+                create("QA-") {
                     dimension = "environment"
-//                applicationIdSuffix = ".qa"
+                    applicationIdSuffix = ".qa"
                     versionNameSuffix = "-qa"
-                    buildConfigField("String", "BASE_URL", "\"https://api.nytimes.com2\"")
-                    buildConfigField("boolean", "IS_DEV", "false")
-                    buildConfigField("boolean", "IS_QA", "true")
-                    buildConfigField("boolean", "IS_UAT", "false")
-                    buildConfigField("boolean", "IS_LIVE", "false")
-
+                    externalNativeBuild {
+                        cmake {
+                            cppFlags("-DENV_QA")
+                        }
+                    }
                 }
-                create("uat") {
-//                externalNativeBuild {
-//                    cmake {
-//                        cppFlags("UAT")
-//                    }
-//                }
+                create("UAT-") {
                     dimension = "environment"
-//                applicationIdSuffix = ".uat"
+                    applicationIdSuffix = ".uat"
                     versionNameSuffix = "-uat"
-                    buildConfigField("String", "BASE_URL", "\"https://api.nytimes.com3\"")
-                    buildConfigField("boolean", "IS_DEV", "false")
-                    buildConfigField("boolean", "IS_QA", "false")
-                    buildConfigField("boolean", "IS_UAT", "true")
-                    buildConfigField("boolean", "IS_LIVE", "false")
-
+                    externalNativeBuild {
+                        cmake {
+                            cppFlags("-DENV_UAT")
+                        }
+                    }
                 }
-                create("production") {
-//                externalNativeBuild {
-//                    cmake {
-//                        cppFlags("production")
-//                    }
-//                }
-                    dimension = "customer"
-//                applicationIdSuffix = ".production"
+                create("PRODCTION-") {  // Add production here as well
+                    dimension = "environment"
+                    applicationIdSuffix = ".production"
                     versionNameSuffix = "-production"
-                    buildConfigField("String", "BASE_URL", "\"https://api.nytimes.com4\"")
-                    buildConfigField("boolean", "IS_DEV", "false")
-                    buildConfigField("boolean", "IS_QA", "false")
-                    buildConfigField("boolean", "IS_UAT", "false")
-                    buildConfigField("boolean", "IS_LIVE", "true")
-
+                    externalNativeBuild {
+                        cmake {
+                            cppFlags("-DENV_PROD")
+                        }
+                    }
                 }
-
-
             }
 
 
@@ -143,6 +118,7 @@ android {
         buildFeatures {
             compose = true
             buildConfig = true
+            viewBinding = true
         }
 
         externalNativeBuild {
@@ -159,6 +135,102 @@ android {
 }
 
 dependencies {
+    // Compose Navigation
+    implementation(libs.androidx.navigation.compose)
+
+    // Retrofit and OkHttp for networking
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.adapter.rxjava2)
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
+
+    // Gson for JSON parsing
+    implementation(libs.gson)
+
+    // ViewModel and LiveData
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    //noinspection GradleDependency
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+    // Paging for pagination
+    //noinspection GradleDependency,GradleDependency
+    implementation(libs.androidx.paging.runtime.ktx)
+    implementation(libs.androidx.paging.compose)
+
+    // Activity Compose
+    //noinspection GradleDependency
+    implementation(libs.androidx.activity.compose)
+
+    // Coil for image loading
+    implementation(libs.coil.compose)
+
+    // ConstraintLayout for Compose
+    implementation(libs.androidx.constraintlayout.compose)
+
+    // Room Database
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    //noinspection GradleDependency,GradleDependency
+    ksp(libs.androidx.room.compiler)
+
+
+    // Compose Runtime
+    implementation(libs.androidx.runtime)
+
+    // Coroutines for async programming
+    implementation(libs.kotlinx.coroutines.core)
+
+    // RootBeer for root detection
+    implementation(libs.rootbeer.lib)
+
+    // Swipe Refresh
+    //noinspection UseTomlInstead
+    implementation(libs.accompanist.swiperefresh)
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.messaging.ktx)
+
+    // Permissions
+    implementation(libs.accompanist.permissions)
+
+    // Additionally, plain Dagger if needed
+    //noinspection UseTomlInstead
+    implementation(libs.dagger)
+    ksp(libs.dagger.compiler)
+
+    // Material Compose
+    implementation(libs.androidx.material)
+
+    // Payment Gateway
+    implementation(libs.checkout)
+
+    // Agora SDK
+    implementation(libs.full.sdk)
+    implementation(libs.rtm.sdk)
+    //noinspection UseTomlInstead,UseTomlInstead
+    implementation("commons-codec:commons-codec:1.17.1")
+
+    // Appcompat and Core
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.appcompat.resources)
+    implementation(libs.androidx.core.ktx.v1120)
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.material.v1110)
+    implementation(libs.androidx.constraintlayout)
+
+    // ReactiveX
+    implementation(libs.rxjava)
+    implementation(libs.rxandroid)
+
+    // System UI Controller
+    implementation(libs.accompanist.systemuicontroller)
+
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -276,104 +348,6 @@ dependencies {
 //
 ////    implementation("com.google.dagger:hilt-android:2.56.1")
 ////    ksp("com.google.dagger:hilt-android-compiler:2.56.1")
-
-
-
-
-    // Compose Navigation
-    implementation("androidx.navigation:navigation-compose:2.7.5")
-
-// Retrofit and OkHttp for networking
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.squareup.retrofit2:adapter-rxjava2:2.9.0")
-    implementation("com.squareup.okhttp3:okhttp:4.9.3")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
-
-// Gson for JSON parsing
-    implementation("com.google.code.gson:gson:2.8.8")
-
-// ViewModel and LiveData
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.5.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.0")
-
-// Paging for pagination
-    implementation("androidx.paging:paging-runtime-ktx:3.1.1")
-    implementation("androidx.paging:paging-compose:3.2.0")
-
-// Activity Compose
-    implementation("androidx.activity:activity-compose:1.4.0")
-
-// Coil for image loading
-    implementation("io.coil-kt:coil-compose:2.1.0")
-
-// ConstraintLayout for Compose
-    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
-
-// Room Database
-    implementation("androidx.room:room-runtime:2.4.2")
-    implementation("androidx.room:room-ktx:2.7.1")
-    ksp("androidx.room:room-compiler:2.7.1")
-
-//    kapt("androidx.room:room-compiler:2.4.3")
-
-
-// Compose Runtime
-    implementation("androidx.compose.runtime:runtime:1.4.0")
-
-// Coroutines for async programming
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
-
-// RootBeer for root detection
-    implementation("com.scottyab:rootbeer-lib:0.1.0")
-
-// Swipe Refresh
-    implementation("com.google.accompanist:accompanist-swiperefresh:0.33.2-alpha")
-
-// Firebase
-    implementation(platform("com.google.firebase:firebase-bom:33.11.0"))
-    implementation("com.google.firebase:firebase-analytics")
-    implementation("com.google.firebase:firebase-messaging")
-    implementation("com.google.firebase:firebase-messaging-ktx")
-
-// Permissions
-    implementation("com.google.accompanist:accompanist-permissions:0.31.1-alpha")
-
-// Dagger
-//    implementation("com.google.dagger:hilt-android:2.48")
-//    kapt("com.google.dagger:hilt-compiler:2.48")
-
-// Additionally, plain Dagger if needed
-    implementation("com.google.dagger:dagger:2.51")
-    ksp("com.google.dagger:dagger-compiler:2.51")
-
-// Material Compose
-    implementation("androidx.compose.material:material:1.7.8")
-
-// Payment Gateway
-    implementation("com.razorpay:checkout:1.6.41")
-
-// Agora SDK
-    implementation("io.agora.rtc:full-sdk:4.0.1")
-    implementation("io.agora.rtm:rtm-sdk:1.5.0")
-    implementation("commons-codec:commons-codec:1.17.1")
-
-// Appcompat and Core
-    implementation("androidx.appcompat:appcompat:1.7.0")
-    implementation("androidx.appcompat:appcompat-resources:1.7.0")
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.recyclerview:recyclerview:1.3.2")
-    implementation("com.google.android.material:material:1.11.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-
-// ReactiveX
-    implementation("io.reactivex.rxjava2:rxjava:2.2.21")
-    implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
-
-// System UI Controller
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.32.0")
-
 
 
 }

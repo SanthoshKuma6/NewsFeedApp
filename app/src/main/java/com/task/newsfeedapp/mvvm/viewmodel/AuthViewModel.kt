@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.task.newsfeedapp.utils.state.AuthState
 
 class AuthViewModel : ViewModel() {
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -64,13 +65,13 @@ class AuthViewModel : ViewModel() {
 
     fun logout(){
         auth.signOut()
-        _authState.value=AuthState.UnAuthenticated
+        _authState.value= AuthState.UnAuthenticated
     }
 }
 
-sealed class AuthState {
-    object Authenticate : AuthState()
-    object UnAuthenticated : AuthState()
-    object Loading : AuthState()
-    data class Error(val message: String) : AuthState()
-}
+//sealed class AuthState {
+//    object Authenticate : AuthState()
+//    object UnAuthenticated : AuthState()
+//    object Loading : AuthState()
+//    data class Error(val message: String) : AuthState()
+//}

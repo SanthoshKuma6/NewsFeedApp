@@ -3,6 +3,7 @@ package com.task.newsfeedapp.base
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import com.task.newsfeedapp.base.component.ActivityComponent
+import com.task.newsfeedapp.base.component.DaggerActivityComponent
 import com.task.newsfeedapp.base.module.ActivityModule
 import javax.inject.Inject
 

@@ -4,12 +4,16 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
+import androidx.compose.runtime.Composable
 import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessaging
 import com.razorpay.PaymentResultListener
-import com.task.newsfeedapp.mvvm.viewmodel.AuthViewModel
+import com.task.newsfeedapp.base.BaseViewModel
+import com.task.newsfeedapp.base.ComposeBaseActivity
+import com.task.newsfeedapp.base.SplashViewModel
+import com.task.newsfeedapp.base.component.ActivityComponent
 import com.task.newsfeedapp.navigation.MyNavHost
 import com.task.newsfeedapp.screens.agora.AgoraChatManager
 import com.task.newsfeedapp.ui.theme.NewsFeedAppTheme
@@ -18,9 +22,10 @@ import com.task.newsfeedapp.ui.theme.NewsFeedAppTheme
  * SANTHOSHKUMAR
  */
 
-class MainActivity : ComponentActivity() , PaymentResultListener {
+class MainActivity : ComposeBaseActivity<SplashViewModel>(),PaymentResultListener {
     private lateinit var chatManager: AgoraChatManager
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -38,21 +43,21 @@ class MainActivity : ComponentActivity() , PaymentResultListener {
             if (it) chatManager.joinChannel("test_channel") {}
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // Code that requires API 26+
-            setContent {
-                NewsFeedAppTheme {
-                    MyNavHost(authViewModel = AuthViewModel())
-                    fetchFCMToken()
+        // Code that requires API 26+
+        setContent {
+            NewsFeedAppTheme {
+               MyApp(viewModel)
+                fetchFCMToken()
 
 
-                }
             }
-
-
         }
 
 
+    }
+
+    override fun injectDependencies(activityComponent: ActivityComponent) {
+        activityComponent.inject(this@MainActivity)
     }
 
 
@@ -84,4 +89,11 @@ class MainActivity : ComponentActivity() , PaymentResultListener {
     override fun onPaymentError(code: Int, description: String?) {
         Toast.makeText(this, "Payment Failed: $description", Toast.LENGTH_LONG).show()
     }
+}
+
+
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+@Composable
+fun MyApp(viewModel: BaseViewModel) {
+    MyNavHost(viewModel)
 }

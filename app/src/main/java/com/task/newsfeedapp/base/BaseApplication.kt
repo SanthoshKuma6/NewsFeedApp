@@ -4,6 +4,8 @@ import android.app.Application
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import com.task.newsfeedapp.base.component.ApplicationComponent
+import com.task.newsfeedapp.base.component.DaggerApplicationComponent
+
 
 open class BaseApplication : Application() {
     lateinit var applicationComponent: ApplicationComponent

@@ -1,6 +1,6 @@
 package com.task.newsfeedapp.base
 
-import com.google.android.datatransport.runtime.scheduling.Scheduler
+import io.reactivex.Scheduler
 import javax.inject.Singleton
 
 @Singleton
@@ -12,3 +12,5 @@ interface SchedulerProvider {
 
     fun ui(): Scheduler
 }
+
+

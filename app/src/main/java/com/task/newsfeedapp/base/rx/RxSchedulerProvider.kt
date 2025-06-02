@@ -7,7 +7,7 @@ import javax.inject.Singleton
 
 
 @Singleton
-class RxSchedulerProvider : SchedulerProvider {
+class RxSchedulerProvider  : SchedulerProvider {
 
     override fun computation(): Scheduler = Schedulers.computation()
 

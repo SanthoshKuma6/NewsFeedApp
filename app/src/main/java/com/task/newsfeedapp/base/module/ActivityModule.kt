@@ -5,11 +5,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.task.newsfeedapp.base.CommonRepository
 import com.task.newsfeedapp.base.ComposeBaseActivity
 import com.task.newsfeedapp.base.NetworkHelper
-import com.task.newsfeedapp.base.SchedulerProvider
 import com.task.newsfeedapp.base.SplashRepository
 import com.task.newsfeedapp.base.SplashViewModel
 import com.task.newsfeedapp.base.dialodge.LoadingDialog
 import com.task.newsfeedapp.base.factory.ViewModelProviderFactory
+import com.task.newsfeedapp.base.rx.SchedulerProvider
 import dagger.Module
 import dagger.Provides
 import io.reactivex.disposables.CompositeDisposable

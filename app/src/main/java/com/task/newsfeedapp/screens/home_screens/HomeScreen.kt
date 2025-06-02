@@ -2,7 +2,6 @@ package com.task.newsfeedapp.screens.home_screens
 
 
 import android.content.Context
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
@@ -50,13 +49,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.task.newsfeedapp.R
-import com.task.newsfeedapp.mvvm.viewmodel.AuthState
-import com.task.newsfeedapp.mvvm.viewmodel.AuthViewModel
+import com.task.newsfeedapp.base.BaseViewModel
 import com.task.newsfeedapp.navigation.OnboardingNavigationObject
 import com.task.newsfeedapp.screens.payment.StartPayment
+import com.task.newsfeedapp.utils.state.AuthState
 
 @Composable
-fun HomeScreen(navController: NavHostController,authViewModel: AuthViewModel) {
+fun HomeScreen(navController: NavHostController,authViewModel: BaseViewModel) {
     val context = LocalContext.current
     val authState = authViewModel.authState.observeAsState()
     LaunchedEffect(authState.value) {
@@ -84,7 +83,7 @@ fun HomeScreen(navController: NavHostController,authViewModel: AuthViewModel) {
 }
 
 @Composable
-fun HeaderSection(authViewModel: AuthViewModel,navController: NavHostController) {
+fun HeaderSection(authViewModel: BaseViewModel, navController: NavHostController) {
 
     Box(
         modifier = Modifier.fillMaxWidth()
@@ -342,5 +341,5 @@ fun AstrologerCard(imageRes: Int, name: String, onConnectClick: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun CallPreviewProfileCard() {
-    HomeScreen(navController = NavHostController(LocalContext.current), authViewModel = AuthViewModel())
+//    HomeScreen(navController = NavHostController(LocalContext.current), authViewModel = AuthViewModel())
 }

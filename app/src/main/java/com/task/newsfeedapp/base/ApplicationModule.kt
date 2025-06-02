@@ -3,14 +3,15 @@ package com.task.newsfeedapp.base
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import com.google.android.datatransport.runtime.dagger.Module
-import com.google.android.datatransport.runtime.dagger.Provides
 import com.task.newsfeedapp.base.di.ApplicationContext
 import com.task.newsfeedapp.base.network.Constants.LOGGED_USER_PREFERENCES
 import com.task.newsfeedapp.base.network.INetworkService
 import com.task.newsfeedapp.base.network.Networking
 import com.task.newsfeedapp.base.rx.RxSchedulerProvider
+import com.task.newsfeedapp.base.rx.SchedulerProvider
 import com.task.newsfeedapp.utils.Utils
+import dagger.Module
+import dagger.Provides
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Singleton
 
@@ -29,7 +30,7 @@ class ApplicationModule(private val application: BaseApplication) {
     fun provideCompositeDisposable(): CompositeDisposable = CompositeDisposable()
 
     @Provides
-    fun provideSchedulerProvider(): RxSchedulerProvider = RxSchedulerProvider()
+    fun provideSchedulerProvider(): SchedulerProvider = RxSchedulerProvider()
 
     @Provides
     @Singleton
