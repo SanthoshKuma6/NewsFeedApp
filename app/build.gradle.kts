@@ -18,7 +18,6 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
     }
@@ -30,80 +29,70 @@ android {
          */
         release {
             isDebuggable = false
-            isMinifyEnabled = true // true when application is launch
-            isShrinkResources = true
+            isMinifyEnabled = false // true when application is launch
+            isShrinkResources = false
             android.buildFeatures.buildConfig = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
-//            buildConfigField("String", "BASE_URL", "https://api.nytimes.com/")
-            signingConfig = signingConfigs.getByName("debug")
+            applicationVariants.all {
+                var outputFileName = "CustomerApp_Release"
+                if (buildType.name == "release") {
+                    outputs.all {
+                        outputFileName = "CustomerApp_Release.apk"
+                    }
+                }
+            }
         }
         debug {
             isDebuggable = true
             isMinifyEnabled = false // true when application is launch
             isShrinkResources = false  // true when application is launch
             android.buildFeatures.buildConfig = true
-//            buildConfigField("String", "BASE_URL", "\"https://api.nytimes.com/\"")
             buildConfigField(
                 "String", "Saved_Signature", "\"0252d7582af33c37d50155a0ec3420d911fc085e\""
             )
-            buildConfigField("boolean", "IS_DEV", "true")
-            buildConfigField("boolean", "IS_QA", "false")
-            buildConfigField("boolean", "IS_UAT", "false")
-            buildConfigField("boolean", "IS_LIVE", "false")
-            externalNativeBuild {
-                cmake {
-                    cppFlags
+        }
 
-                }
-            }
-//        }
             flavorDimensions += listOf("environment")
             productFlavors {
-                create("DEVELOPMENT-") {
+                create("DEVELOPMENT") {
                     dimension = "environment"
-//                    applicationIdSuffix = ".dev"
-                    versionNameSuffix = "-dev"
+                    applicationId = "com.task.newsfeedapp"
+                    externalNativeBuild {
+                        cmake {
+                            cppFlags.add("-DDEVELOPMENT")
+                        }
+                    }
+                }
+                create("QA") {
+                    dimension = "environment"
+                    applicationId = "com.task.newsfeedapp"
+                    externalNativeBuild {
+                        cmake {
+                            cppFlags.add("-DQA")
+                        }
+                    }
+                }
+                create("UAT") {
+                    dimension = "environment"
+                    applicationId = "com.task.newsfeedapp"
+                    externalNativeBuild {
+                        cmake {
+                            cppFlags.add("-DUAT")
+                        }
+                    }
+                }
+                create("PRODCTION") {  // Add production here as well
+                    dimension = "environment"
+                    applicationId = "com.task.newsfeedapp"
+                    externalNativeBuild {
+                        cmake {
+                            cppFlags.add("-DPRODCTION")
+                        }
+                    }
+                }
 
-
-                    externalNativeBuild {
-                        cmake {
-                            cppFlags("-DENV_DEV")
-                        }
-                    }
-                }
-                create("QA-") {
-                    dimension = "environment"
-                    applicationIdSuffix = ".qa"
-                    versionNameSuffix = "-qa"
-                    externalNativeBuild {
-                        cmake {
-                            cppFlags("-DENV_QA")
-                        }
-                    }
-                }
-                create("UAT-") {
-                    dimension = "environment"
-                    applicationIdSuffix = ".uat"
-                    versionNameSuffix = "-uat"
-                    externalNativeBuild {
-                        cmake {
-                            cppFlags("-DENV_UAT")
-                        }
-                    }
-                }
-                create("PRODCTION-") {  // Add production here as well
-                    dimension = "environment"
-                    applicationIdSuffix = ".production"
-                    versionNameSuffix = "-production"
-                    externalNativeBuild {
-                        cmake {
-                            cppFlags("-DENV_PROD")
-                        }
-                    }
-                }
-            }
 
 
         }

@@ -12,10 +12,7 @@ cmake_minimum_required(VERSION 3.22.1)
 project("native-lib")
 
 # Define a build flag (Uncomment the appropriate line based on your environment)
-add_definitions(-DPRODUCTION)  # For production
-add_definitions(-DUAT)         # For UAT
-add_definitions(-DAQ)         # For QA
-add_definitions(-DDEVELOPMENT)   # For development (Default)
+
 
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
