@@ -35,7 +35,7 @@ fun AgoraChatScreen(navController: NavHostController) {
         Row {
             TextField(value = message, onValueChange = { message = it })
             Button(onClick = {
-                chatManager.sendMessage(message) { success ->
+                chatManager.sendPeerMessage("dummy_recipient", message) { success ->
                     if (success) {
                         messages.add("Me: $message")
                         message = ""

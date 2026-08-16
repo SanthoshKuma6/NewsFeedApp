@@ -7,6 +7,9 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessaging
 import com.razorpay.PaymentResultListener
@@ -14,16 +17,20 @@ import com.task.newsfeedapp.base.BaseViewModel
 import com.task.newsfeedapp.base.ComposeBaseActivity
 import com.task.newsfeedapp.base.SplashViewModel
 import com.task.newsfeedapp.base.component.ActivityComponent
+import com.task.newsfeedapp.component.NoInternetDialog
 import com.task.newsfeedapp.navigation.MyNavHost
 import com.task.newsfeedapp.screens.agora.AgoraChatManager
 import com.task.newsfeedapp.ui.theme.NewsFeedAppTheme
+import javax.inject.Inject
+import com.task.newsfeedapp.utils.NetworkMonitor
 
 /**
  * SANTHOSHKUMAR
  */
 
 class MainActivity : ComposeBaseActivity<SplashViewModel>(),PaymentResultListener {
-    private lateinit var chatManager: AgoraChatManager
+    @Inject
+    lateinit var chatManager: AgoraChatManager
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,20 +43,32 @@ class MainActivity : ComposeBaseActivity<SplashViewModel>(),PaymentResultListene
             Log.e("FCM", "Firebase initialization failed", e)
         }
 
-        chatManager = AgoraChatManager(this, "YOUR_AGORA_APP_ID")
         chatManager.initialize()
 
-        chatManager.login("user1", null) {
-            if (it) chatManager.joinChannel("test_channel") {}
+        val currentUser = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser
+        currentUser?.email?.let { email ->
+            // Use sanitized email as userId (Agora doesn't like some characters)
+            val sanitizedId = email.replace(".", "_").replace("@", "_")
+            chatManager.login(sanitizedId, null) { success ->
+                if (success) {
+                    Log.d("AgoraRTM", "Logged in as $sanitizedId")
+                }
+            }
         }
 
         // Code that requires API 26+
         setContent {
+            val networkMonitor = remember { NetworkMonitor(this) }
+            val isConnected by networkMonitor.isConnected.collectAsState()
+
             NewsFeedAppTheme {
-               MyApp(viewModel)
+                MyApp(viewModel, chatManager)
+                if (!isConnected) {
+                    NoInternetDialog {
+                        // The NetworkMonitor automatically updates isConnected state
+                    }
+                }
                 fetchFCMToken()
-
-
             }
         }
 
@@ -94,6 +113,6 @@ class MainActivity : ComposeBaseActivity<SplashViewModel>(),PaymentResultListene
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
-fun MyApp(viewModel: BaseViewModel) {
-    MyNavHost(viewModel)
+fun MyApp(viewModel: BaseViewModel, chatManager: AgoraChatManager) {
+    MyNavHost(viewModel, chatManager)
 }

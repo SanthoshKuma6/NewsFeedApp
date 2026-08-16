@@ -9,6 +9,7 @@ import com.task.newsfeedapp.base.network.INetworkService
 import com.task.newsfeedapp.base.network.Networking
 import com.task.newsfeedapp.base.rx.RxSchedulerProvider
 import com.task.newsfeedapp.base.rx.SchedulerProvider
+import com.task.newsfeedapp.screens.agora.AgoraChatManager
 import com.task.newsfeedapp.utils.Utils
 import dagger.Module
 import dagger.Provides
@@ -49,4 +50,9 @@ class ApplicationModule(private val application: BaseApplication) {
             application.cacheDir,
             10 * 1024 * 1024 // 10MB
         )
+
+    @Provides
+    @Singleton
+    fun provideAgoraChatManager(): AgoraChatManager =
+        AgoraChatManager(application, "YOUR_AGORA_APP_ID") // Replace with real ID
 }

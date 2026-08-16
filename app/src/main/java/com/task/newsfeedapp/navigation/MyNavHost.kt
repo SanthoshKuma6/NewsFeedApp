@@ -2,7 +2,16 @@ package com.task.newsfeedapp.navigation
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -14,7 +23,10 @@ import com.task.newsfeedapp.base.SplashViewModel
 import com.task.newsfeedapp.model.ArticleResponse
 import com.task.newsfeedapp.model.RoomModel
 import com.task.newsfeedapp.mvvm.viewmodel.AuthViewModel
+import com.task.newsfeedapp.utils.state.AuthState
 import com.task.newsfeedapp.screens.ArticleDetailScreen
+import com.task.newsfeedapp.screens.DetailedChatScreen
+import com.task.newsfeedapp.screens.agora.AgoraChatManager
 import com.task.newsfeedapp.screens.ArticleScreen
 import com.task.newsfeedapp.screens.RoomDetailedScreen
 import com.task.newsfeedapp.screens.agora.AgoraChatScreen
@@ -33,17 +45,22 @@ object OnboardingNavigationObject {
     const val OTP_SUCCESS_SCREEN = "VerificationSuccess"
     const val BOTTOM_SHEET_SCREEN = "BottomSheetNavigationApp"
     const val AGORA_CHAT_SCREEN="AgoraChatScreen"
+    const val SPLASH_SCREEN = "SplashScreen"
+    const val DETAILED_CHAT_SCREEN = "DetailedChatScreen"
 
 }
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
-fun MyNavHost(authViewModel: BaseViewModel) {
+fun MyNavHost(authViewModel: BaseViewModel, chatManager: AgoraChatManager) {
     val splashViewModel = authViewModel as? SplashViewModel
             ?: throw IllegalStateException("Invalid ViewModel Type")
 
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = OnboardingNavigationObject.LOGIN_SCREEN) {
+    NavHost(navController = navController, startDestination = OnboardingNavigationObject.SPLASH_SCREEN) {
+        composable(OnboardingNavigationObject.SPLASH_SCREEN) {
+            SplashScreen(navController, splashViewModel)
+        }
         composable(OnboardingNavigationObject.LOGIN_SCREEN) {
             LoginScreen(navController, splashViewModel)
         }
@@ -58,7 +75,7 @@ fun MyNavHost(authViewModel: BaseViewModel) {
             VerificationSuccess(navController)
         }
         composable(OnboardingNavigationObject.BOTTOM_SHEET_SCREEN) {
-            BottomSheetNavigationApp(navController,splashViewModel)
+            BottomSheetNavigationApp(navController,splashViewModel, chatManager)
         }
         composable("ArticleScreen") {
             ArticleScreen(navController)
@@ -71,6 +88,10 @@ fun MyNavHost(authViewModel: BaseViewModel) {
         }
         composable(OnboardingNavigationObject.AGORA_CHAT_SCREEN) {
             AgoraChatScreen(navController)
+        }
+        composable("${OnboardingNavigationObject.DETAILED_CHAT_SCREEN}/{userName}") { backStackEntry ->
+            val userName = backStackEntry.arguments?.getString("userName") ?: ""
+            DetailedChatScreen(navController, userName, chatManager)
         }
         composable(
             "ArticleDetailScreen/{articleJson}",
@@ -95,5 +116,33 @@ fun MyNavHost(authViewModel: BaseViewModel) {
         }
 
 
+    }
+}
+
+@Composable
+fun SplashScreen(navController: NavHostController, viewModel: BaseViewModel) {
+    val authState by viewModel.authState.observeAsState()
+
+    LaunchedEffect(authState) {
+        when (authState) {
+            is AuthState.Authenticate -> {
+                navController.navigate(OnboardingNavigationObject.BOTTOM_SHEET_SCREEN) {
+                    popUpTo(OnboardingNavigationObject.SPLASH_SCREEN) { inclusive = true }
+                }
+            }
+            is AuthState.UnAuthenticated -> {
+                navController.navigate(OnboardingNavigationObject.LOGIN_SCREEN) {
+                    popUpTo(OnboardingNavigationObject.SPLASH_SCREEN) { inclusive = true }
+                }
+            }
+            else -> Unit
+        }
+    }
+
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator()
     }
 }

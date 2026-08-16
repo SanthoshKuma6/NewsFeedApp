@@ -22,10 +22,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.task.newsfeedapp.base.BaseViewModel
+import com.task.newsfeedapp.screens.CallHistoryScreen
+import com.task.newsfeedapp.screens.agora.AgoraChatManager
 import com.task.newsfeedapp.screens.agora.AgoraChatScreen
 import java.util.Locale
 
@@ -101,7 +101,7 @@ import java.util.Locale
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomSheetNavigationApp(navController: NavController,authViewModel: BaseViewModel) {
+fun BottomSheetNavigationApp(navController: NavHostController,authViewModel: BaseViewModel, chatManager: AgoraChatManager) {
 
     val sheetState = rememberModalBottomSheetState()
     var showSheet by remember { mutableStateOf(false) }
@@ -112,9 +112,9 @@ fun BottomSheetNavigationApp(navController: NavController,authViewModel: BaseVie
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
             when (selectedScreen) {
-                "home" -> HomeScreen(navController = NavHostController(LocalContext.current),authViewModel)
-                "chat" -> ChatScreen(navController = NavHostController(LocalContext.current))
-                "call" -> AgoraChatScreen(navController = NavHostController(LocalContext.current))
+                "home" -> HomeScreen(navController = navController,authViewModel)
+                "chat" -> ChatScreen(navController = navController)
+                "call" -> CallHistoryScreen(navController = navController)
             }
         }
     }

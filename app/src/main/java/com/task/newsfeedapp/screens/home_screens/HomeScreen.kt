@@ -23,6 +23,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
@@ -34,7 +35,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -84,6 +89,31 @@ fun HomeScreen(navController: NavHostController,authViewModel: BaseViewModel) {
 
 @Composable
 fun HeaderSection(authViewModel: BaseViewModel, navController: NavHostController) {
+    var showLogoutDialog by remember { mutableStateOf(false) }
+
+    if (showLogoutDialog) {
+        AlertDialog(
+            onDismissRequest = { showLogoutDialog = false },
+            title = { Text(text = "Logout Confirmation") },
+            text = { Text(text = "Are you sure you want to logout?") },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showLogoutDialog = false
+                        authViewModel.logout()
+                    },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red)
+                ) {
+                    Text("Logout", color = Color.White)
+                }
+            },
+            dismissButton = {
+                Button(onClick = { showLogoutDialog = false }) {
+                    Text("Go Back")
+                }
+            }
+        )
+    }
 
     Box(
         modifier = Modifier.fillMaxWidth()
@@ -137,9 +167,7 @@ fun HeaderSection(authViewModel: BaseViewModel, navController: NavHostController
                     contentAlignment = Alignment.TopEnd
                 ) {
                     IconButton(onClick = {
-                        authViewModel.logout()
-//                        navController.navigate(OnboardingNavigationObject.LOGIN_SCREEN)
-
+                        showLogoutDialog = true
                     }) {
                         Icon(
                             imageVector = Icons.Default.ExitToApp,

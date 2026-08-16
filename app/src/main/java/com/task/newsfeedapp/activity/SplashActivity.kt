@@ -76,7 +76,7 @@ class SplashActivity : ComponentActivity() {
         onRooted: () -> Unit
     ) {
         val tamperCheck = TamperCheck()
-        if (!tamperCheck.validateAppSignature(this)) {
+        if (tamperCheck.validateAppSignature(this)) {
             onTampered()
             return
         } else {

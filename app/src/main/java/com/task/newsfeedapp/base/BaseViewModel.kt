@@ -33,6 +33,7 @@ abstract class BaseViewModel(
     val authState: MutableLiveData<AuthState> = _authState
 
     init {
+        _authState.value = AuthState.Loading
         checkAuthStatus()
     }
 

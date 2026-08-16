@@ -1,5 +1,6 @@
 package com.task.newsfeedapp.screens.login_screesn
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -50,6 +51,9 @@ import com.task.newsfeedapp.component.login_component.PrivacyAndTerms
 import com.task.newsfeedapp.navigation.OnboardingNavigationObject
 import com.task.newsfeedapp.utils.state.AuthState
 
+
+//user name : shanthosh403@gmail.com
+// pass : 123456
 @Composable
 fun LoginScreen(navController: NavController,authViewModel: BaseViewModel) {
     var email by rememberSaveable  { mutableStateOf("") }
@@ -65,11 +69,18 @@ fun LoginScreen(navController: NavController,authViewModel: BaseViewModel) {
                     hasNavigated=true
                     navController.navigate(OnboardingNavigationObject.BOTTOM_SHEET_SCREEN)
                 }
-                is AuthState.Error -> Toast.makeText(
-                    context,
-                    (authState.value as AuthState.Error).message,
-                    Toast.LENGTH_LONG
-                ).show()
+                is AuthState.Error ->{
+                    val data= authState.value as AuthState.Error
+                    Log.d("TAG_LOGIN", "LoginScreen: $data")
+
+                    Toast.makeText(
+                        context,
+                        "Incorrect email or password. Please try again",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+
+
 
                 else -> Unit
             }
