@@ -10,7 +10,10 @@ import com.task.newsfeedapp.base.NetworkHelper
 import com.task.newsfeedapp.base.SplashRepository
 import com.task.newsfeedapp.base.di.ApplicationContext
 import com.task.newsfeedapp.base.rx.SchedulerProvider
+import com.task.newsfeedapp.mvvm.repository.ChatRepository
+import com.task.newsfeedapp.mvvm.repository.ProfileRepository
 import com.task.newsfeedapp.screens.agora.AgoraChatManager
+import com.task.newsfeedapp.screens.agora.AgoraRTCManager
 import dagger.Component
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Singleton
@@ -37,4 +40,10 @@ interface ApplicationComponent {
     fun getLoginRepository(): SplashRepository
 
     fun getAgoraChatManager(): AgoraChatManager
+    
+    fun getAgoraRTCManager(): AgoraRTCManager
+
+    fun getChatRepository(): ChatRepository
+
+    fun getProfileRepository(): ProfileRepository
 }

@@ -1,5 +1,6 @@
 package com.task.newsfeedapp.activity
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -18,8 +19,11 @@ import com.task.newsfeedapp.base.ComposeBaseActivity
 import com.task.newsfeedapp.base.SplashViewModel
 import com.task.newsfeedapp.base.component.ActivityComponent
 import com.task.newsfeedapp.component.NoInternetDialog
+import com.task.newsfeedapp.mvvm.repository.ChatRepository
+import com.task.newsfeedapp.mvvm.repository.ProfileRepository
 import com.task.newsfeedapp.navigation.MyNavHost
 import com.task.newsfeedapp.screens.agora.AgoraChatManager
+import com.task.newsfeedapp.screens.agora.AgoraRTCManager
 import com.task.newsfeedapp.ui.theme.NewsFeedAppTheme
 import javax.inject.Inject
 import com.task.newsfeedapp.utils.NetworkMonitor
@@ -28,15 +32,20 @@ import com.task.newsfeedapp.utils.NetworkMonitor
  * SANTHOSHKUMAR
  */
 
-class MainActivity : ComposeBaseActivity<SplashViewModel>(),PaymentResultListener {
+class MainActivity : ComposeBaseActivity<SplashViewModel>(), PaymentResultListener {
     @Inject
     lateinit var chatManager: AgoraChatManager
+    @Inject
+    lateinit var rtcManager: AgoraRTCManager
+    @Inject
+    lateinit var chatRepository: ChatRepository
+    @Inject
+    lateinit var profileRepository: ProfileRepository
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//         Initialize Firebase
         try {
             FirebaseApp.initializeApp(this)
         } catch (e: Exception) {
@@ -47,7 +56,6 @@ class MainActivity : ComposeBaseActivity<SplashViewModel>(),PaymentResultListene
 
         val currentUser = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser
         currentUser?.email?.let { email ->
-            // Use sanitized email as userId (Agora doesn't like some characters)
             val sanitizedId = email.replace(".", "_").replace("@", "_")
             chatManager.login(sanitizedId, null) { success ->
                 if (success) {
@@ -56,13 +64,14 @@ class MainActivity : ComposeBaseActivity<SplashViewModel>(),PaymentResultListene
             }
         }
 
-        // Code that requires API 26+
+        handleIntent(intent)
+
         setContent {
             val networkMonitor = remember { NetworkMonitor(this) }
             val isConnected by networkMonitor.isConnected.collectAsState()
 
             NewsFeedAppTheme {
-                MyApp(viewModel, chatManager)
+                MyApp(viewModel, chatManager, rtcManager, chatRepository, profileRepository)
                 if (!isConnected) {
                     NoInternetDialog {
                         // The NetworkMonitor automatically updates isConnected state
@@ -71,14 +80,28 @@ class MainActivity : ComposeBaseActivity<SplashViewModel>(),PaymentResultListene
                 fetchFCMToken()
             }
         }
+    }
 
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleIntent(intent)
+    }
 
+    private fun handleIntent(intent: Intent?) {
+        intent?.let {
+            val senderId = it.getStringExtra("INCOMING_CALL_SENDER_ID")
+            // val senderName = it.getStringExtra("INCOMING_CALL_SENDER_NAME")
+            // val isVideo = it.getBooleanExtra("INCOMING_CALL_IS_VIDEO", false)
+
+            if (senderId != null) {
+                // Future: Trigger navigation to call screen from here
+            }
+        }
     }
 
     override fun injectDependencies(activityComponent: ActivityComponent) {
         activityComponent.inject(this@MainActivity)
     }
-
 
     private fun fetchFCMToken() {
         try {
@@ -87,13 +110,8 @@ class MainActivity : ComposeBaseActivity<SplashViewModel>(),PaymentResultListene
                     Log.w("FCM", "Fetching FCM registration token failed", task.exception)
                     return@addOnCompleteListener
                 }
-
-                // Get new FCM registration token
                 val token = task.result
-
-                // Log and show token
                 Log.d("FCM", "FCM Token: $token")
-//                Toast.makeText(this, "FCM Token: $token", Toast.LENGTH_SHORT).show()
             }
         } catch (e: Exception) {
             Log.e("FCM", "Error fetching FCM token", e)
@@ -102,7 +120,6 @@ class MainActivity : ComposeBaseActivity<SplashViewModel>(),PaymentResultListene
 
     override fun onPaymentSuccess(razorpayPaymentId: String?) {
         Toast.makeText(this, "Payment Successful: $razorpayPaymentId", Toast.LENGTH_LONG).show()
-
     }
 
     override fun onPaymentError(code: Int, description: String?) {
@@ -110,9 +127,14 @@ class MainActivity : ComposeBaseActivity<SplashViewModel>(),PaymentResultListene
     }
 }
 
-
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
-fun MyApp(viewModel: BaseViewModel, chatManager: AgoraChatManager) {
-    MyNavHost(viewModel, chatManager)
+fun MyApp(
+    viewModel: BaseViewModel,
+    chatManager: AgoraChatManager,
+    rtcManager: AgoraRTCManager,
+    chatRepository: ChatRepository,
+    profileRepository: ProfileRepository
+) {
+    MyNavHost(viewModel, chatManager, rtcManager, chatRepository, profileRepository)
 }

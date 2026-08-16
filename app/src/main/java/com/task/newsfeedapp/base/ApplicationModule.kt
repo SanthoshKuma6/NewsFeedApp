@@ -9,7 +9,10 @@ import com.task.newsfeedapp.base.network.INetworkService
 import com.task.newsfeedapp.base.network.Networking
 import com.task.newsfeedapp.base.rx.RxSchedulerProvider
 import com.task.newsfeedapp.base.rx.SchedulerProvider
+import com.task.newsfeedapp.mvvm.repository.ChatRepository
+import com.task.newsfeedapp.mvvm.repository.ProfileRepository
 import com.task.newsfeedapp.screens.agora.AgoraChatManager
+import com.task.newsfeedapp.screens.agora.AgoraRTCManager
 import com.task.newsfeedapp.utils.Utils
 import dagger.Module
 import dagger.Provides
@@ -55,4 +58,17 @@ class ApplicationModule(private val application: BaseApplication) {
     @Singleton
     fun provideAgoraChatManager(): AgoraChatManager =
         AgoraChatManager(application, "YOUR_AGORA_APP_ID") // Replace with real ID
+
+    @Provides
+    @Singleton
+    fun provideAgoraRTCManager(): AgoraRTCManager =
+        AgoraRTCManager(application, "YOUR_AGORA_APP_ID") // Replace with real ID
+
+    @Provides
+    @Singleton
+    fun provideChatRepository(): ChatRepository = ChatRepository()
+
+    @Provides
+    @Singleton
+    fun provideProfileRepository(): ProfileRepository = ProfileRepository()
 }

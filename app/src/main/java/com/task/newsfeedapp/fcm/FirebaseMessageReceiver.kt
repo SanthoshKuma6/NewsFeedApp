@@ -20,6 +20,8 @@ import com.task.newsfeedapp.model.fcm.NotificationModel
 import com.task.newsfeedapp.mvvm.viewmodel.ArticleViewModel
 import com.task.newsfeedapp.mvvm.viewmodel.MainViewModel
 import com.task.newsfeedapp.utils.isAppIsInBackground
+import com.task.newsfeedapp.activity.MainActivity
+import com.task.newsfeedapp.screens.agora.AgoraChatManager
 
 
 class FirebaseMessageReceiver : FirebaseMessagingService() {
@@ -36,6 +38,15 @@ class FirebaseMessageReceiver : FirebaseMessagingService() {
         }
         remoteMessage.data.let {
             Log.d("TAG", "onMessageReceived: ${it["title"]} ${it["body"]}")
+            
+            // Check for Call Invite
+            if (it["type"] == AgoraChatManager.SIGNAL_CALL_INVITE) {
+                val senderId = it["senderId"] ?: "Unknown"
+                val senderName = it["senderName"] ?: "Unknown"
+                val isVideo = it["isVideo"] == "true"
+                handleIncomingCall(senderId, senderName, isVideo)
+                return
+            }
         }
         if (isAppIsInBackground(applicationContext)) {
 
@@ -157,5 +168,18 @@ class FirebaseMessageReceiver : FirebaseMessagingService() {
 
         val mainViewModel = MainViewModel()
         mainViewModel.setNotification(notification)
+    }
+
+    private fun handleIncomingCall(senderId: String, senderName: String, isVideo: Boolean) {
+        val intent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            putExtra("INCOMING_CALL_SENDER_ID", senderId)
+            putExtra("INCOMING_CALL_SENDER_NAME", senderName)
+            putExtra("INCOMING_CALL_IS_VIDEO", isVideo)
+        }
+        
+        // On modern Android, we usually show a High-Priority notification with a full-screen intent
+        // For simplicity here, we'll launch the activity directly (requires permission on Android 10+)
+        startActivity(intent)
     }
 }

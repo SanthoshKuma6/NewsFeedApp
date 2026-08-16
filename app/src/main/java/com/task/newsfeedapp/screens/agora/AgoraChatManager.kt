@@ -9,6 +9,14 @@ class AgoraChatManager(private val context: Context, private val appId: String) 
     private var rtmChannel: RtmChannel? = null
     
     var onMessageReceived: ((String, String) -> Unit)? = null // (senderId, message)
+    var onCallSignalReceived: ((String, String) -> Unit)? = null // (senderId, type)
+
+    companion object {
+        const val SIGNAL_CALL_INVITE = "CALL_INVITE"
+        const val SIGNAL_CALL_ACCEPT = "CALL_ACCEPT"
+        const val SIGNAL_CALL_REJECT = "CALL_REJECT"
+        const val SIGNAL_CALL_END = "CALL_END"
+    }
 
     fun initialize() {
         if (rtmClient != null) return
@@ -22,7 +30,13 @@ class AgoraChatManager(private val context: Context, private val appId: String) 
                 override fun onMessageReceived(message: RtmMessage?, peerId: String?) {
                     Log.d("AgoraRTM", "Message received from $peerId: ${message?.text}")
                     if (message != null && peerId != null) {
-                        onMessageReceived?.invoke(peerId, message.text)
+                        val text = message.text
+                        if (text == SIGNAL_CALL_INVITE || text == SIGNAL_CALL_ACCEPT || 
+                            text == SIGNAL_CALL_REJECT || text == SIGNAL_CALL_END) {
+                            onCallSignalReceived?.invoke(peerId, text)
+                        } else {
+                            onMessageReceived?.invoke(peerId, text)
+                        }
                     }
                 }
 

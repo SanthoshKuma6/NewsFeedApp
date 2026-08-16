@@ -30,7 +30,8 @@ import androidx.compose.material.Card
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -158,6 +159,25 @@ fun HeaderSection(authViewModel: BaseViewModel, navController: NavHostController
                     }
                 }
 
+                // Profile icon at the top left
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(150.dp)
+                        .padding(16.dp),
+                    contentAlignment = Alignment.TopStart
+                ) {
+                    IconButton(onClick = {
+                        navController.navigate(OnboardingNavigationObject.PROFILE_SCREEN)
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.AccountCircle,
+                            contentDescription = "Profile",
+                            tint = Color.White
+                        )
+                    }
+                }
+
                 // Logout icon at the top right corner
                 Box(
                     modifier = Modifier
@@ -170,7 +190,7 @@ fun HeaderSection(authViewModel: BaseViewModel, navController: NavHostController
                         showLogoutDialog = true
                     }) {
                         Icon(
-                            imageVector = Icons.Default.ExitToApp,
+                            imageVector = Icons.AutoMirrored.Filled.ExitToApp,
                             contentDescription = "Logout",
                             tint = Color.White
                         )

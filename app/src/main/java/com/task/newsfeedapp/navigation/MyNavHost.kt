@@ -24,9 +24,11 @@ import com.task.newsfeedapp.model.ArticleResponse
 import com.task.newsfeedapp.model.RoomModel
 import com.task.newsfeedapp.mvvm.viewmodel.AuthViewModel
 import com.task.newsfeedapp.utils.state.AuthState
-import com.task.newsfeedapp.screens.ArticleDetailScreen
-import com.task.newsfeedapp.screens.DetailedChatScreen
+import com.task.newsfeedapp.mvvm.repository.ChatRepository
+import com.task.newsfeedapp.mvvm.repository.ProfileRepository
+import com.task.newsfeedapp.screens.*
 import com.task.newsfeedapp.screens.agora.AgoraChatManager
+import com.task.newsfeedapp.screens.agora.AgoraRTCManager
 import com.task.newsfeedapp.screens.ArticleScreen
 import com.task.newsfeedapp.screens.RoomDetailedScreen
 import com.task.newsfeedapp.screens.agora.AgoraChatScreen
@@ -47,12 +49,20 @@ object OnboardingNavigationObject {
     const val AGORA_CHAT_SCREEN="AgoraChatScreen"
     const val SPLASH_SCREEN = "SplashScreen"
     const val DETAILED_CHAT_SCREEN = "DetailedChatScreen"
+    const val VOICE_CALL_SCREEN = "VoiceCallScreen"
+    const val PROFILE_SCREEN = "ProfileScreen"
 
 }
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
-fun MyNavHost(authViewModel: BaseViewModel, chatManager: AgoraChatManager) {
+fun MyNavHost(
+    authViewModel: BaseViewModel,
+    chatManager: AgoraChatManager,
+    rtcManager: AgoraRTCManager,
+    chatRepository: ChatRepository,
+    profileRepository: ProfileRepository
+) {
     val splashViewModel = authViewModel as? SplashViewModel
             ?: throw IllegalStateException("Invalid ViewModel Type")
 
@@ -75,7 +85,7 @@ fun MyNavHost(authViewModel: BaseViewModel, chatManager: AgoraChatManager) {
             VerificationSuccess(navController)
         }
         composable(OnboardingNavigationObject.BOTTOM_SHEET_SCREEN) {
-            BottomSheetNavigationApp(navController,splashViewModel, chatManager)
+            BottomSheetNavigationApp(navController, splashViewModel, chatManager, rtcManager, chatRepository, profileRepository)
         }
         composable("ArticleScreen") {
             ArticleScreen(navController)
@@ -91,7 +101,17 @@ fun MyNavHost(authViewModel: BaseViewModel, chatManager: AgoraChatManager) {
         }
         composable("${OnboardingNavigationObject.DETAILED_CHAT_SCREEN}/{userName}") { backStackEntry ->
             val userName = backStackEntry.arguments?.getString("userName") ?: ""
-            DetailedChatScreen(navController, userName, chatManager)
+            DetailedChatScreen(navController, userName, chatManager, chatRepository)
+        }
+        composable("${OnboardingNavigationObject.VOICE_CALL_SCREEN}/{userName}/{peerId}/{isIncoming}/{isVideo}") { backStackEntry ->
+            val userName = backStackEntry.arguments?.getString("userName") ?: ""
+            val peerId = backStackEntry.arguments?.getString("peerId") ?: ""
+            val isIncoming = backStackEntry.arguments?.getString("isIncoming")?.toBoolean() ?: false
+            val isVideo = backStackEntry.arguments?.getString("isVideo")?.toBoolean() ?: false
+            VoiceCallScreen(navController, userName, peerId, chatManager, rtcManager, isIncoming, isVideo)
+        }
+        composable(OnboardingNavigationObject.PROFILE_SCREEN) {
+            ProfileScreen(navController, profileRepository)
         }
         composable(
             "ArticleDetailScreen/{articleJson}",

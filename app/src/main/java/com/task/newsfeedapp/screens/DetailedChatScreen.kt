@@ -1,5 +1,6 @@
 package com.task.newsfeedapp.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -36,10 +37,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,11 +50,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.task.newsfeedapp.R
+import com.task.newsfeedapp.model.ChatMessage as FirestoreChatMessage
+import com.task.newsfeedapp.mvvm.repository.ChatRepository
 import com.task.newsfeedapp.screens.agora.AgoraChatManager
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.launch
 
 data class ChatMessage(
     val text: String,
@@ -62,24 +69,82 @@ data class ChatMessage(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailedChatScreen(navController: NavController, userName: String, chatManager: AgoraChatManager) {
-    val messages = remember {
-        mutableStateListOf(
-            ChatMessage(text = "I will reply in 5 seconds", isFromMe = false, time = "21:46"),
-            ChatMessage(text = "Send me a message", isFromMe = false, time = "21:46"),
-            ChatMessage(text = "Well hello there!", isFromMe = true, time = "21:46"),
-            ChatMessage(text = "Well hello there!", isFromMe = false, time = "21:46")
-        )
+fun DetailedChatScreen(
+    navController: NavController,
+    userName: String,
+    chatManager: AgoraChatManager,
+    chatRepository: ChatRepository
+) {
+    val currentUserId = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid ?: "unknown"
+    
+    // Safely handle the messages flow to prevent crashes on PERMISSION_DENIED
+    val messagesFlow = remember(currentUserId, userName) {
+        chatRepository.getMessages(currentUserId, userName)
+            .catch { e ->
+                Log.e("DetailedChatScreen", "Permission denied or error fetching messages for $userName", e)
+                emit(emptyList())
+            }
+    }
+    val messagesState = messagesFlow.collectAsState(initial = emptyList())
+    
+    val uiMessages = messagesState.value.map { 
+        ChatMessage(it.text, it.senderId == currentUserId, "21:46") 
+    }
+
+    LaunchedEffect(currentUserId) {
+        if (currentUserId == "unknown") {
+            Log.w("DetailedChatScreen", "User is not authenticated. Popping backstack.")
+            navController.popBackStack()
+        }
     }
 
     LaunchedEffect(Unit) {
         chatManager.onMessageReceived = { senderId, text ->
-            messages.add(ChatMessage(text, false, "Now"))
+            // Already handled by Firestore real-time updates if both use Firestore
+            // But we keep RTM for immediate feedback or if Firestore is slow
         }
     }
 
     var inputText by remember { mutableStateOf("") }
 
+    val coroutineScope = rememberCoroutineScope()
+
+    DetailedChatContent(
+        userName = userName,
+        messages = uiMessages,
+        inputText = inputText,
+        onBackClick = { navController.popBackStack() },
+        onTextChange = { inputText = it },
+        onSend = {
+            if (inputText.isNotBlank()) {
+                val messageToSend = inputText
+                coroutineScope.launch {
+                    chatRepository.sendMessage(
+                        FirestoreChatMessage(
+                            senderId = currentUserId,
+                            receiverId = userName,
+                            text = messageToSend
+                        )
+                    )
+                }
+                // Optional: Send RTM signal for typing or immediate delivery
+                chatManager.sendPeerMessage(userName, messageToSend) { }
+                inputText = ""
+            }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DetailedChatContent(
+    userName: String,
+    messages: List<ChatMessage>,
+    inputText: String,
+    onBackClick: () -> Unit,
+    onTextChange: (String) -> Unit,
+    onSend: () -> Unit
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -102,7 +167,7 @@ fun DetailedChatScreen(navController: NavController, userName: String, chatManag
                     }
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = onBackClick) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
@@ -112,18 +177,9 @@ fun DetailedChatScreen(navController: NavController, userName: String, chatManag
         bottomBar = {
             ChatInputBar(
                 text = inputText,
-                onTextChange = { inputText = it }
-            ) {
-                if (inputText.isNotBlank()) {
-                    val messageToSend = inputText
-                    chatManager.sendPeerMessage(userName, messageToSend) { success ->
-                        if (success) {
-                            messages.add(ChatMessage(messageToSend, true, "21:47"))
-                        }
-                    }
-                    inputText = ""
-                }
-            }
+                onTextChange = onTextChange,
+                onSend = onSend
+            )
         },
         containerColor = Color(0xFFF8F9FB) // Light grey/blue background
     ) { padding ->
@@ -242,4 +298,22 @@ fun ChatInputBar(
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DetailedChatPreview() {
+    DetailedChatContent(
+        userName = "Parrot",
+        messages = listOf(
+            ChatMessage("I will reply in 5 seconds", false, "21:46"),
+            ChatMessage("Send me a message", false, "21:46"),
+            ChatMessage("Well hello there!", true, "21:46"),
+            ChatMessage("Well hello there!", false, "21:46")
+        ),
+        inputText = "",
+        onBackClick = {},
+        onTextChange = {},
+        onSend = {}
+    )
 }

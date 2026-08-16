@@ -24,12 +24,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.task.newsfeedapp.R
-import android.content.Intent
+import com.task.newsfeedapp.navigation.OnboardingNavigationObject
 import androidx.core.net.toUri
 import androidx.compose.foundation.clickable
 
 data class CallLog(
     val name: String,
+    val peerId: String,
     val date: String,
     val time: String,
     val isIncoming: Boolean,
@@ -39,34 +40,30 @@ data class CallLog(
 )
 
 val dummyCallLogs = listOf(
-    CallLog("Diyash & Karencheng", "23 January", "10:53 pm", isIncoming = true, isMissed = false, isVoiceCall = false, R.drawable.profile_pic),
-    CallLog("Danlok", "23 January", "10:35 pm", isIncoming = true, isMissed = false, isVoiceCall = false, R.drawable.profile_pic),
-    CallLog("Shiny", "23 January", "10:33 pm", isIncoming = true, isMissed = false, isVoiceCall = true, R.drawable.profile_pic),
-    CallLog("Kayadu", "23 January", "10:29 pm", isIncoming = false, isMissed = false, isVoiceCall = false, R.drawable.profile_pic),
-    CallLog("Rakesh", "23 January", "8:46 pm", isIncoming = false, isMissed = false, isVoiceCall = true, R.drawable.profile_pic),
-    CallLog("Maureen", "23 January", "8:18 pm", isIncoming = true, isMissed = true, isVoiceCall = true, R.drawable.profile_pic),
-    CallLog("Deepika", "23 January", "7:49 pm", isIncoming = false, isMissed = false, isVoiceCall = true, R.drawable.profile_pic),
-    CallLog("Santhosh", "23 January", "7:49 pm", isIncoming = false, isMissed = false, isVoiceCall = true, R.drawable.profile_pic),
-    CallLog("Sheeba", "23 January", "7:49 pm", isIncoming = false, isMissed = false, isVoiceCall = true, R.drawable.profile_pic),
-    CallLog("Madhu", "23 January", "7:49 pm", isIncoming = false, isMissed = false, isVoiceCall = true, R.drawable.profile_pic),
+    CallLog("Diyash & Karencheng", "diyash_k", "23 January", "10:53 pm", isIncoming = true, isMissed = false, isVoiceCall = false, R.drawable.profile_pic),
+    CallLog("Danlok", "danlok_g", "23 January", "10:35 pm", isIncoming = true, isMissed = false, isVoiceCall = false, R.drawable.profile_pic),
+    CallLog("Shiny", "shiny_s", "23 January", "10:33 pm", isIncoming = true, isMissed = false, isVoiceCall = true, R.drawable.profile_pic),
+    CallLog("Kayadu", "kayadu_k", "23 January", "10:29 pm", isIncoming = false, isMissed = false, isVoiceCall = false, R.drawable.profile_pic),
+    CallLog("Rakesh", "rakesh_r", "23 January", "8:46 pm", isIncoming = false, isMissed = false, isVoiceCall = true, R.drawable.profile_pic),
+    CallLog("Maureen", "maureen_m", "23 January", "8:18 pm", isIncoming = true, isMissed = true, isVoiceCall = true, R.drawable.profile_pic),
+    CallLog("Deepika", "deepika_d", "23 January", "7:49 pm", isIncoming = false, isMissed = false, isVoiceCall = true, R.drawable.profile_pic),
+    CallLog("Santhosh", "santhosh_s", "23 January", "7:49 pm", isIncoming = false, isMissed = false, isVoiceCall = true, R.drawable.profile_pic),
+    CallLog("Sheeba", "sheeba_s", "23 January", "7:49 pm", isIncoming = false, isMissed = false, isVoiceCall = true, R.drawable.profile_pic),
+    CallLog("Madhu", "madhu_m", "23 January", "7:49 pm", isIncoming = false, isMissed = false, isVoiceCall = true, R.drawable.profile_pic),
 )
 
 @Composable
 fun CallHistoryScreen(navController: NavHostController) {
-    val context = LocalContext.current
     
-    fun openDialer(phoneNumber: String = "") {
-        val intent = Intent(Intent.ACTION_DIAL).apply {
-            data = "tel:$phoneNumber".toUri()
-        }
-        context.startActivity(intent)
+    fun startCall(userName: String = "Unknown", peerId: String = "unknown", isVideo: Boolean = false) {
+        navController.navigate("${OnboardingNavigationObject.VOICE_CALL_SCREEN}/$userName/$peerId/false/$isVideo")
     }
 
     Scaffold(
         backgroundColor = Color(0xFF0B141B), // Dark WhatsApp-like background
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { openDialer() },
+                onClick = { startCall() },
                 backgroundColor = Color(0xFF20C659),
                 contentColor = Color.White
             ) {
@@ -99,7 +96,7 @@ fun CallHistoryScreen(navController: NavHostController) {
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 items(dummyCallLogs) { log ->
                     CallLogItem(log) {
-                        openDialer() // Redirect to dialer on click
+                        startCall(log.name, log.peerId, !log.isVoiceCall) 
                     }
                 }
             }
