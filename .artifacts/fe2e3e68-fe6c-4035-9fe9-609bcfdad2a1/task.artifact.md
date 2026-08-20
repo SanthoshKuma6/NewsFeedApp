@@ -1,5 +1,6 @@
-# Tasks - Fix Firestore PERMISSION_DENIED Crash
+# Tasks - Display User Name on Dashboard
 
-- `[x]` Update `ChatRepository.kt` to handle Firestore errors in `getMessages` flow.
-- `[x]` Update `DetailedChatScreen.kt` to safely collect messages and handle unauthenticated states.
-- `[x]` Verify changes and log error messages instead of crashing.
+- `[x]` Update `HomeScreen.kt` to fetch and display the user's name.
+- `[x]` Update `BottomSheetNavigation.kt` to pass `ProfileRepository` to `HomeScreen`.
+- `[x]` Update `MyNavHost.kt` to pass `ProfileRepository` to `HomeScreen`.
+- `[x]` Verify the name is correctly displayed on the dashboard.

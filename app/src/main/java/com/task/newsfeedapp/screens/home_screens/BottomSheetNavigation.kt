@@ -134,7 +134,7 @@ fun BottomSheetNavigationApp(
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
             when (selectedScreen) {
-                "home" -> HomeScreen(navController = navController,authViewModel)
+                "home" -> HomeScreen(navController = navController, authViewModel, profileRepository)
                 "chat" -> ChatScreen(navController = navController)
                 "call" -> CallHistoryScreen(navController = navController)
             }

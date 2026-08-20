@@ -61,6 +61,8 @@ import com.task.newsfeedapp.screens.agora.AgoraChatManager
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
+import com.task.newsfeedapp.utils.Utils
+
 data class ChatMessage(
     val text: String,
     val isFromMe: Boolean,
@@ -75,7 +77,8 @@ fun DetailedChatScreen(
     chatManager: AgoraChatManager,
     chatRepository: ChatRepository
 ) {
-    val currentUserId = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid ?: "unknown"
+    val currentUser = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser
+    val currentUserId = Utils.sanitizeEmail(currentUser?.email)
     
     // Safely handle the messages flow to prevent crashes on PERMISSION_DENIED
     val messagesFlow = remember(currentUserId, userName) {
@@ -92,7 +95,7 @@ fun DetailedChatScreen(
     }
 
     LaunchedEffect(currentUserId) {
-        if (currentUserId == "unknown") {
+        if (currentUser == null) {
             Log.w("DetailedChatScreen", "User is not authenticated. Popping backstack.")
             navController.popBackStack()
         }
@@ -171,7 +174,7 @@ fun DetailedChatContent(
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Black)
             )
         },
         bottomBar = {
@@ -181,7 +184,7 @@ fun DetailedChatContent(
                 onSend = onSend
             )
         },
-        containerColor = Color(0xFFF8F9FB) // Light grey/blue background
+        containerColor = Color(0xFF0B141B) // Light grey/blue background
     ) { padding ->
         LazyColumn(
             modifier = Modifier
@@ -230,7 +233,7 @@ fun MessageBubble(message: ChatMessage) {
                 Text(
                     text = message.text,
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
-                    color = if (message.isFromMe) Color.White else Color.Black,
+                    color = if (message.isFromMe) Color.Black else Color.Black,
                     fontSize = 15.sp
                 )
             }

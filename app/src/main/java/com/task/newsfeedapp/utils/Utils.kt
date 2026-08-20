@@ -10,5 +10,8 @@ object Utils {
 //    const val Saved_Signature = BuildConfig.Saved_Signature
      val Saved_Signature = Keys.APPSIGNATURE()
 
+    fun sanitizeEmail(email: String?): String {
+        return email?.replace(".", "_")?.replace("@", "_") ?: "unknown"
+    }
 
 }

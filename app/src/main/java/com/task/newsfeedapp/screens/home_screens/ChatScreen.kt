@@ -7,8 +7,22 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.filled.Send
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,23 +37,27 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.task.newsfeedapp.R
 import com.task.newsfeedapp.navigation.OnboardingNavigationObject
+import com.task.newsfeedapp.utils.Utils
 
 data class ChatEntry(
     val name: String,
+    val username: String, // Sanitized email
     val lastMessage: String,
     val time: String,
     val imageRes: Int,
 )
 
 val dummyChats = listOf(
-    ChatEntry("Sheep", "Send me a message", "21:46", R.drawable.profile_pic),
-    ChatEntry("Parrot", "Send me a message", "21:46", R.drawable.profile_pic),
-    ChatEntry("Dog", "Send me a message", "21:46", R.drawable.profile_pic),
-    ChatEntry("Cat", "Send me a message", "21:46", R.drawable.profile_pic)
+    ChatEntry("Sheep", "sheep_example_com", "Send me a message", "21:46", R.drawable.profile_pic),
+    ChatEntry("Parrot", "parrot_example_com", "Send me a message", "21:46", R.drawable.profile_pic),
+    ChatEntry("Dog", "dog_example_com", "Send me a message", "21:46", R.drawable.profile_pic),
+    ChatEntry("Cat", "cat_example_com", "Send me a message", "21:46", R.drawable.profile_pic)
 )
 
 @Composable
 fun ChatScreen(navController: NavHostController) {
+    var newChatUsername by remember { mutableStateOf("") }
+    
     // Soft gradient background (light blue to white)
     Box(
         modifier = Modifier
@@ -68,12 +86,50 @@ fun ChatScreen(navController: NavHostController) {
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
+            // Start New Chat Section
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                OutlinedTextField(
+                    value = newChatUsername,
+                    onValueChange = { newChatUsername = it },
+                    placeholder = { Text("Enter email to chat", color = Color.Gray) },
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedTextColor = Color.White,
+                        unfocusedTextColor = Color.White,
+                        focusedBorderColor = Color.White,
+                        unfocusedBorderColor = Color.Gray
+                    ),
+                    singleLine = true
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                IconButton(
+                    onClick = {
+                        if (newChatUsername.isNotBlank()) {
+                            val sanitized = Utils.sanitizeEmail(newChatUsername)
+                            navController.navigate("${OnboardingNavigationObject.DETAILED_CHAT_SCREEN}/$sanitized")
+                            newChatUsername = ""
+                        }
+                    },
+                    modifier = Modifier
+                        .size(56.dp)
+                        .background(Color(0xFF00A884), CircleShape)
+                ) {
+                    Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "Start Chat", tint = Color.White)
+                }
+            }
+
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ) {
                 items(dummyChats) { chat ->
                     ChatListItem(chat) {
-                        navController.navigate("${OnboardingNavigationObject.DETAILED_CHAT_SCREEN}/${chat.name}")
+                        navController.navigate("${OnboardingNavigationObject.DETAILED_CHAT_SCREEN}/${chat.username}")
                     }
                 }
             }

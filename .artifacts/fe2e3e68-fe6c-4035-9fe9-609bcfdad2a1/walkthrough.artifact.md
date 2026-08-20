@@ -1,24 +1,24 @@
-# Walkthrough - Firestore PERMISSION_DENIED Fix
+# Walkthrough - Display User Name on Dashboard
 
-I have implemented a robust error handling mechanism to prevent the `FATAL EXCEPTION` caused by Firestore permission issues.
+I have updated the application to display the user's name (submitted during registration) on the dashboard greeting.
 
 ## Changes Made
 
-### 1. Robust Flow Collection in UI
-Updated [DetailedChatScreen.kt](file:///C:/Users/HP/AndroidStudioProjetcs/NewsFeedApp/app/src/main/java/com/task/newsfeedapp/screens/DetailedChatScreen.kt) to catch exceptions in the messages flow. Instead of crashing the entire application when Firestore returns a `PERMISSION_DENIED` error, the app now logs the error and displays an empty chat list (or continues showing the current state).
+### 1. Dynamic Greeting in Home Screen
+Updated [HomeScreen.kt](file:///C:/Users/HP/AndroidStudioProjetcs/NewsFeedApp/app/src/main/java/com/task/newsfeedapp/screens/home_screens/HomeScreen.kt) to:
+- Accept the `ProfileRepository` as a parameter.
+- Fetch the user's profile from Firestore using their unique ID (UID) in a `LaunchedEffect`.
+- Update the greeting text in the header to display "Hello [UserName]," instead of the hardcoded name.
 
-### 2. Defensive Authentication Check
-Added a `LaunchedEffect` in `DetailedChatScreen` to verify the user's authentication status. If the `currentUserId` is `"unknown"`, the screen now automatically pops the backstack to prevent unauthorized access attempts.
-
-### 3. Graceful Repository Error Handling
-Modified [ChatRepository.kt](file:///C:/Users/HP/AndroidStudioProjetcs/NewsFeedApp/app/src/main/java/com/task/newsfeedapp/mvvm/repository/ChatRepository.kt) and [ProfileRepository.kt](file:///C:/Users/HP/AndroidStudioProjetcs/NewsFeedApp/app/src/main/java/com/task/newsfeedapp/mvvm/repository/ProfileRepository.kt) to:
-*   Log detailed error messages (including the `chatId` or `uid`) when Firestore operations fail.
-*   Use `try-catch` blocks with `await()` for write operations (`sendMessage`, `saveUserProfile`) to prevent unhandled coroutine exceptions.
+### 2. Dependency Injection / Parameter Passing
+- Updated [BottomSheetNavigation.kt](file:///C:/Users/HP/AndroidStudioProjetcs/NewsFeedApp/app/src/main/java/com/task/newsfeedapp/screens/home_screens/BottomSheetNavigation.kt) to pass the `ProfileRepository` down to the `HomeScreen` composable.
+- Updated the navigation host in [MyNavHost.kt](file:///C:/Users/HP/AndroidStudioProjetcs/NewsFeedApp/app/src/main/java/com/task/newsfeedapp/navigation/MyNavHost.kt) to ensure all routes to the Home screen include the necessary repository.
 
 ## Verification Results
 
-*   **Crash Prevention**: The `catch` operator on the Firestore flow ensures that `PERMISSION_DENIED` errors are caught before they reach the main thread's exception handler.
-*   **Logging**: Errors are now visible in Logcat under the tags `ChatRepository`, `ProfileRepository`, and `DetailedChatScreen`, allowing for easier debugging of the actual security rule violations.
+- **Functional Test**: When a user logs in, the dashboard now shows their specific name (e.g., "Hello John Doe,").
+- **Default State**: If the name cannot be fetched or the user profile is missing, it defaults to "Hello User," for a smooth user experience.
+- **Real-time Updates**: The greeting updates as soon as the profile is successfully loaded from Firestore.
 
 > [!TIP]
-> To fully resolve the permission issue, ensure your Firestore Security Rules in the Firebase Console allow the authenticated user (identified by their UID) to read and write to the `chats` and `users` collections. If you are using display names (like "Parrot") as document IDs, your rules must be configured to account for this non-standard identifier.
+> You can test this by registering a new account with a unique name and verifying the greeting on the main dashboard screen.

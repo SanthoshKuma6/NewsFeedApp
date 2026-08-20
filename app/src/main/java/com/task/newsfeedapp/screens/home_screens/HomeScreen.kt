@@ -60,16 +60,35 @@ import com.task.newsfeedapp.navigation.OnboardingNavigationObject
 import com.task.newsfeedapp.screens.payment.StartPayment
 import com.task.newsfeedapp.utils.state.AuthState
 
+import com.task.newsfeedapp.mvvm.repository.ProfileRepository
+
 @Composable
-fun HomeScreen(navController: NavHostController,authViewModel: BaseViewModel) {
+fun HomeScreen(
+    navController: NavHostController,
+    authViewModel: BaseViewModel,
+    profileRepository: ProfileRepository
+) {
     val context = LocalContext.current
     val authState = authViewModel.authState.observeAsState()
+    val currentUserId = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid ?: ""
+    var userName by remember { mutableStateOf("User") }
+
     LaunchedEffect(authState.value) {
         when (authState.value) {
             is AuthState.UnAuthenticated -> navController.navigate(OnboardingNavigationObject.LOGIN_SCREEN)
             else -> Unit
         }
     }
+
+    LaunchedEffect(currentUserId) {
+        if (currentUserId.isNotEmpty()) {
+            val profile = profileRepository.getUserProfile(currentUserId)
+            if (profile != null && profile.displayName.isNotEmpty()) {
+                userName = profile.displayName
+            }
+        }
+    }
+
     Surface(modifier = Modifier
         .fillMaxSize()) {
 
@@ -79,7 +98,7 @@ fun HomeScreen(navController: NavHostController,authViewModel: BaseViewModel) {
                 .background(color = colorResource(R.color.teal_200))
                 .verticalScroll(rememberScrollState())
         ) {
-            HeaderSection(authViewModel,navController)
+            HeaderSection(authViewModel, navController, userName)
             Spacer(Modifier.height(20.dp))
             HoroscopeSection()
             ServiceSection()
@@ -89,7 +108,7 @@ fun HomeScreen(navController: NavHostController,authViewModel: BaseViewModel) {
 }
 
 @Composable
-fun HeaderSection(authViewModel: BaseViewModel, navController: NavHostController) {
+fun HeaderSection(authViewModel: BaseViewModel, navController: NavHostController, userName: String) {
     var showLogoutDialog by remember { mutableStateOf(false) }
 
     if (showLogoutDialog) {
@@ -146,7 +165,7 @@ fun HeaderSection(authViewModel: BaseViewModel, navController: NavHostController
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "Hello Rajeshwari,",
+                            text = "Hello $userName,",
                             color = Color.White,
                             fontSize = 16.sp
                         )

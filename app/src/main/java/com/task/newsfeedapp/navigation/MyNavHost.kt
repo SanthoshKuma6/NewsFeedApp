@@ -75,8 +75,7 @@ fun MyNavHost(
             LoginScreen(navController, splashViewModel)
         }
         composable(OnboardingNavigationObject.SIGNUP_SCREEN) {
-            SignUpScreen(navController,splashViewModel)
-
+            SignUpScreen(navController, splashViewModel, profileRepository)
         }
         composable(OnboardingNavigationObject.OTP_SCREEN) {
             OtpVerificationScreen(navController)
@@ -91,7 +90,7 @@ fun MyNavHost(
             ArticleScreen(navController)
         }
         composable("HomeScreen") {
-            HomeScreen(navController,splashViewModel)
+            HomeScreen(navController, authViewModel, profileRepository)
         }
         composable("ChatScreen") {
             ChatScreen(navController)

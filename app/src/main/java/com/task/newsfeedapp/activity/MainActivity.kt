@@ -28,6 +28,8 @@ import com.task.newsfeedapp.ui.theme.NewsFeedAppTheme
 import javax.inject.Inject
 import com.task.newsfeedapp.utils.NetworkMonitor
 
+import com.task.newsfeedapp.utils.Utils
+
 /**
  * SANTHOSHKUMAR
  */
@@ -56,7 +58,7 @@ class MainActivity : ComposeBaseActivity<SplashViewModel>(), PaymentResultListen
 
         val currentUser = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser
         currentUser?.email?.let { email ->
-            val sanitizedId = email.replace(".", "_").replace("@", "_")
+            val sanitizedId = Utils.sanitizeEmail(email)
             chatManager.login(sanitizedId, null) { success ->
                 if (success) {
                     Log.d("AgoraRTM", "Logged in as $sanitizedId")

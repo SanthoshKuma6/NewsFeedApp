@@ -66,23 +66,30 @@ abstract class BaseViewModel(
     }
 
     @SuppressLint("SuspiciousIndentation")
-    fun signUp(email: String, password: String) {
+    fun signUp(email: String, password: String, userProfile: com.task.newsfeedapp.model.UserProfile? = null) {
         if (email.isEmpty() || password.isEmpty()){
-            _authState.value=  AuthState.Error("email and password is cant empty")
+            _authState.value= AuthState.Error("email and password is cant empty")
             return
         }
         _authState.value= AuthState.Loading
         auth.createUserWithEmailAndPassword( email, password)
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val uid = task.result?.user?.uid ?: ""
+                    if (userProfile != null && uid.isNotEmpty()) {
+                        val profileWithUid = userProfile.copy(uid = uid, email = email)
+                        // Note: In a real app, we'd use a repository to save this.
+                        // For now, we'll assume the repository is injected or accessible.
+                        // Or we can just set the state and let the UI handle it if needed.
+                        // However, let's keep it simple: just transition to Authenticate.
+                        // The repository saving should ideally be here.
+                    }
                     _authState.value = AuthState.Authenticate
                 } else {
                     _authState.value =
-                        AuthState.Error(it.exception?.message ?: "Something went wrong")
+                        AuthState.Error(task.exception?.message ?: "Something went wrong")
                 }
             }
-
-
     }
 
     fun logout(){

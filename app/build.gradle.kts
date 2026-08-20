@@ -10,12 +10,12 @@ plugins {
 
 android {
     namespace = "com.task.newsfeedapp"
-    compileSdk = 35
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.task.newsfeedapp"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 37
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -242,101 +242,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-//
-//    // Navigation for Compose
-//    implementation("androidx.navigation:navigation-compose:2.8.8")
-//
-//    // Retrofit for network requests
-//    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-//
-//    // OkHttp for HTTP requests
-//    implementation("com.squareup.okhttp3:okhttp:4.9.3")
-//
-//    // OkHttp Logging Interceptor for debugging network requests
-//    implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
-//
-//    // Gson converter for Retrofit
-//    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-//
-//    // Gson for JSON parsing
-//    implementation("com.google.code.gson:gson:2.8.8")
-//
-//    // ViewModel KTX for easy usage of ViewModels
-//    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0")
-//
-//    // Paging for pagination handling
-//    implementation("androidx.paging:paging-runtime-ktx:3.1.1")
-//    implementation("androidx.paging:paging-compose:1.0.0-alpha14")
-//
-//    // LiveData for data observation
-//    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.5.0")
-//
-//    // Activity Compose (for Compose-based activities)
-//    implementation("androidx.activity:activity-compose:1.4.0")
-//
-//    // ViewModel Compose (for Compose-based ViewModels)
-//    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.0")
-//
-//    // Coil for image loading in Compose
-//    implementation("io.coil-kt:coil-compose:2.1.0")
-//
-//    // ConstraintLayout for Compose
-//    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
-//
-//    // Room Database for local persistence
-//    implementation("androidx.room:room-runtime:2.4.2")
-//    implementation("androidx.room:room-ktx:2.4.2")
-//    annotationProcessor("androidx.room:room-compiler:2.4.2")
-//    kapt("androidx.room:room-compiler:2.4.3")
-//
-//    // Compose Runtime (needed for Compose-based projects)
-//    implementation("androidx.compose.runtime:runtime:1.4.0")
-//
-//    // Coroutines Core for asynchronous programming
-//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
-//
-//
-//    implementation("androidx.paging:paging-compose:3.2.0")
-//
-//    implementation("com.scottyab:rootbeer-lib:0.1.0")
-//
-//    implementation("com.google.accompanist:accompanist-swiperefresh:0.33.2-alpha")
-//
-//    implementation(platform("com.google.firebase:firebase-bom:33.11.0"))
-//    implementation("com.google.firebase:firebase-analytics")
-//
-//    // messaging
-//    implementation("com.google.firebase:firebase-messaging:24.1.1")
-//    implementation("com.google.firebase:firebase-messaging-ktx:24.1.1")
-//
-//    // notification permission
-//    implementation("com.google.accompanist:accompanist-permissions:0.31.1-alpha")
-//
-//    // dagger
-//    implementation("com.google.dagger:hilt-android:2.48")
-//    kapt("com.google.dagger:hilt-compiler:2.48")
-//
-//    implementation("androidx.compose.material:material:1.7.8")
-//    //payment gate way
-//    implementation("com.razorpay:checkout:1.6.41")
-//
-//    // sdk
-//     implementation("io.agora.rtc:full-sdk:4.0.1")
-//     implementation("io.agora.rtm:rtm-sdk:1.5.0")
-//     implementation("commons-codec:commons-codec:1.17.1")
-//
-//
-//    val appcompat_version = "1.7.0"
-//
-//    implementation("androidx.appcompat:appcompat:$appcompat_version")
-//    // For loading and tinting drawables on older versions of the platform
-//    implementation("androidx.appcompat:appcompat-resources:$appcompat_version")
-//
-//    implementation ("com.google.dagger:dagger:2.51")
-//    kapt ("com.google.dagger:dagger-compiler:2.51")
-//
-////    implementation("com.google.dagger:hilt-android:2.56.1")
-////    ksp("com.google.dagger:hilt-android-compiler:2.56.1")
 
 
 }
